@@ -1,11 +1,11 @@
 const mysql = require('mysql2/promise');
 const config = {
-    host : 'ch-4ml.iptime.org',
+    host : '127.0.0.1',
     user : 'ch-4ml',
     password : 'knifeark7677',
-    port : 3306,
-    database : 'vote',
+    database : 'voting',
     dateStrings: 'date'
 };
+
 const pool = mysql.createPool(config);
 module.exports = pool;

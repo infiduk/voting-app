@@ -1,30 +1,21 @@
-const pool = require('./connection');
+const db = require('./connect');
 
 class Vote {
-    insert(vote1) {
-        async () => {
-            try {
-                const connection = await pool.getConnection(async conn => conn);
-                try {
-                    var sql = 'insert into vote(title, candidates, electorates, begin_date, end_date, limit) values(?, ?, ?, ?, ?, ?)';
-                    connection.beginTransaction();
-                    const [rows] = connection.query(sql, [vote.title, vote.candidates, vote.electorates, vote.begin_date, vote.end_date, vote.limit]);
-                    console.log("In model: " + rows);
-                    connection.commit();
-                    connection.release();
-                    return rows;
-                } catch (err) {
-                    connection.rollback();
-                    connection.release();
-                    console.log('Query Error');
-                    return false;
-                }
-            } catch(err) {
-                console.log('DB ERROR');
-                return false;
-            }
-        }
+    insert(vote) {
+        return new Promise((resolve, reject) => {
+            var sql = 'INSERT INTO vote SET ?';
+            db.query(sql, vote).then(results => {
+                let result = vote;
+                result.id = results[0]['insertId'];
+                resolve(result);
+            }).catch(err => {
+                reject(err);
+            });
+        });
     }
+
+
+
 }
 
 module.exports = new Vote();
