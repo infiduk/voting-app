@@ -3,8 +3,6 @@ const session = require('express-session');
 const voteRouter = express.Router();
 const voteModel = require('../model/vote_model');
 
-// 후보자랑, 선거권자 테이블을 따로 만들면 안되나?
-
 // 새로운 선거 등록
 voteRouter.post('/new', (req, res) => {
     const vote = {
@@ -14,7 +12,7 @@ voteRouter.post('/new', (req, res) => {
         limit: req.body.limit
     };
     try {
-        voteModel.insert(vote);
+        voteModel.newVote(vote);
         console.log("ok");
     } catch (err) {
         console.log(err);

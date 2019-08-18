@@ -1,9 +1,10 @@
 const db = require('./connect');
 
 class Vote {
-    insert(vote) {
+    // 새 선거 생성
+    newVote(vote) {
         return new Promise((resolve, reject) => {
-            var sql = 'INSERT INTO vote SET ?';
+            let sql = 'INSERT INTO vote SET ?';
             db.query(sql, vote).then(results => {
                 let result = vote;
                 result.id = results[0]['insertId'];
@@ -14,8 +15,17 @@ class Vote {
         });
     }
 
-
-
+    // 선거 목록 조회
+    queryVote() {
+        return new Promise((resolve, reject) => {
+            let sql = 'SELECT * FROM vote';
+            db.query(sql).then(results => {
+                resolve(results);
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
 }
 
 module.exports = new Vote();

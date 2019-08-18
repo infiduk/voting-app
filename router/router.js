@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userRouter = require('./user_router');
+const userRouter = require('./electorate_router');
 const voteRouter = require('./vote_router');
 
 router.use(userRouter);
