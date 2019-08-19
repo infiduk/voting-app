@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const userRouter = require('./electorate_router');
+const candidateRouter = require('./candidate_router')
+const electorateRouter = require('./electorate_router');
 const voteRouter = require('./vote_router');
 
-router.use(userRouter);
+router.use(candidateRouter);
+router.use(electorateRouter);
 router.use(voteRouter);
 
 const moment = require('moment'); require('moment-timezone');
