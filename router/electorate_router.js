@@ -47,16 +47,29 @@ electorateRouter.post('/checkElectorate/:voteId', (req, res) => {
 });
 
 
-electorateRouter.post('/registerAuth/:voteId', (req, res) => {
+electorateRouter.post('/registerAuth/:voteId/:category', (req, res) => {
     // 세션에서 id랑 auth결과 조회
-    // id 결과가 여러개일 수 있기 때문에 auth 있는지 검사하고 없으면 생성
-    // 생성한 값을 저장
-    // select
+    let auth = Math.floor(Math.random() * 10000);
+    let len;
+    if(req.param.category == 1) len = 6; // 휴대전화 인증
+    else len = 4; // 현장 인증
+    
     const data = {
         id: id,
         vote_id: req.param.voteId,
-        auth: auth
+        auth: pad(auth, len),
     };
-})
+
+    electorateModel.createAuth(data).then(result => {
+        res.status(200).send({result: result[0]});
+    }).catch(err => {
+        res.status(500).send({err: err});
+    });
+});
+
+function pad(n, width) {
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+}
 
 module.exports = electorateRouter;
