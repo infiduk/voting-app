@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const candidateRouter = require('./candidate_router')
-const electorateRouter = require('./electorate_router');
-const voteRouter = require('./vote_router');
+const adminRouter = require('./admin_router')
+const userRouter = require('./user_router');
 
-router.use(candidateRouter);
-router.use(electorateRouter);
-router.use(voteRouter);
+router.use(adminRouter);
+router.use(userRouter);
 
 const moment = require('moment'); require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');

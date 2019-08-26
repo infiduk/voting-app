@@ -28,6 +28,16 @@ class Vote {
     }
 
     // 진행 중인 선거 선택
+    select(voteId) {
+        return new Promise((resolve, reject) => {
+            let sql = 'SELECT * FROM vote WHERE ID = ?';
+            db.query(sql, voteId).then(results => {
+                resolve(results[0]);
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
 }
 
 module.exports = new Vote();

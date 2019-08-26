@@ -2,13 +2,11 @@ const db = require('./connect');
 
 class Electorate {
     // 선거권자 추가
-    create(electorate) {
+    create(electorates) {
         return new Promise((resolve, reject) => {
             let sql = 'INSERT INTO electorate SET ?';
             db.query(sql, electorate).then(results => {
-                let result = electorate;
-                result.id = results[0]['insertId'];
-                resolve(result);
+                //result.id = results[0]['insertId'];
             }).catch(err => {
                 reject(err);
             });
@@ -24,19 +22,6 @@ class Electorate {
            }).catch(err => {
                reject(err);
            });
-        });
-    }
-
-    // 인증번호 생성
-    createAuth(data) {
-        return new Promise((resolve, reject) => {
-            let sql = 'UPDATE electorate SET AUTH = ? WHERE ID = ? AND VOTE_ID = ?';
-            db.query(sql, [data.auth, data.id, data.vote_id]).then(results => {
-                resolve('success');
-            }).catch(err => {
-                console.error('failed: ', err);
-                reject(err);
-            });
         });
     }
 }
