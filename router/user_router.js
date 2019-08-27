@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const userRouter = express.Router();
-const electorateModel = require('../model/user_model');
+const electorateModel = require('../model/electorate_model');
 
 userRouter.use(session({
     secret: 'keyboard cat',
@@ -49,18 +49,13 @@ userRouter.get('/checkElectorate/:voteId', (req, res) => {
     });
 });
 
-// 인증번호 조회 페이지로 이동
-userRouter.get('/queryAuth/:voteId/', (req, res) => {
-    // 관리자인지 확인
-    
+// 휴대폰 번호로 인증번호 조회
+userRouter.get('/queryAuthWithPhone/:voteId/', (req, res) => {
     res.redirect('');
 });
 
-// 관리자가 선거권자의 인증번호 조회
-userRouter.post('/queryAuth/:voteId/', (req, res) => {
+userRouter.post('/queryAuthWithPhone/:voteId/', (req, res) => {
     
 });
-
-
 
 module.exports = userRouter;

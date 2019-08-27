@@ -63,6 +63,17 @@ adminRouter.post('/registerElectorate', (req, res) => {
     });
 });
 
+// 관리자가 선거권자의 인증번호 조회
+adminRouter.get('/queryAuth/:voteId/', (req, res) => {
+    // 관리자인지 확인
+
+    res.redirect('');
+});
+
+adminRouter.post('/queryAuth/:voteId/', (req, res) => {
+    
+});
+
 // 인증번호용 앞에 0 채우기
 function authGenerator(auth, len) {
     auth = auth + '';
