@@ -49,30 +49,15 @@ userRouter.get('/checkElectorate/:voteId', (req, res) => {
     });
 });
 
-// 인증 종류 별 인증번호 생성
-userRouter.post('/registerAuth/:voteId/:category', (req, res) => {
-    // 세션에서 id랑 auth결과 조회
-    let auth = Math.floor(Math.random() * 10000);
-    let len;
-    if(req.param.category == 1) len = 6; // 휴대전화 인증
-    else len = 4; // 현장 인증
+// 인증번호 조회 페이지로 이동
+userRouter.get('/queryAuth/:voteId/', (req, res) => {
+    // 관리자인지 확인
     
-    const data = {
-        id: id,
-        vote_id: req.param.voteId,
-        auth: pad(auth, len),
-    };
-
-    electorateModel.createAuth(data).then(result => {
-        // 휴대폰 SMS 전송
-        res.status(200).send({result: result[0]});
-    }).catch(err => {
-        res.status(500).send({err: err});
-    });
+    res.redirect('');
 });
 
-// 관리자가 투표자의 인증번호 조회
-userRouter.get('/queryAuth/:voteId/', (req, res) => {
+// 관리자가 선거권자의 인증번호 조회
+userRouter.post('/queryAuth/:voteId/', (req, res) => {
     
 });
 

@@ -7,6 +7,7 @@ class Electorate {
             let sql = 'INSERT INTO electorate SET ?';
             db.query(sql, electorate).then(results => {
                 //result.id = results[0]['insertId'];
+                resolve(results);
             }).catch(err => {
                 reject(err);
             });
@@ -22,6 +23,18 @@ class Electorate {
            }).catch(err => {
                reject(err);
            });
+        });
+    }
+
+    // 투표 완료 시간 저장
+    update(electorate) {
+        return new Promise((resolve, reject) => {
+            let sql = 'UPDATE electorate SET VOTE_TIME = ? WHERE ID = ?';
+            db.query(sql, [electorate.vote_time, electorate.id]).then(result => {
+                resolve(result);
+            }).catch(err => {
+                reject(err);
+            });
         });
     }
 }
