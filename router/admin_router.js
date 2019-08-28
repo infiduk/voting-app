@@ -76,7 +76,7 @@ adminRouter.get('/queryAuth/:voteId/', (req, res) => {
     electorateModel.select(electorate).then(result => {
         if(result[0].length > 0) {
             electorateModel.updateAuth(result[0][0].id).then(result => {
-                // result: 생성된 인증번호
+                // result: 생성된 인증번호를 전송
             }).catch(err => {
 
             });
@@ -86,14 +86,8 @@ adminRouter.get('/queryAuth/:voteId/', (req, res) => {
     }).catch(err => {
 
     });
-    res.redirect('');
 });
 
-adminRouter.post('/queryAuth/:voteId/', (req, res) => {
-    
-});
+adminRouter
 
-
-
-// authGenerator(auth, 4)
 module.exports = adminRouter;

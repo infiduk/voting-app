@@ -17,7 +17,7 @@ class Electorate {
     // 선거권자 목록에 있는지 조회
     select(electorate) {
         return new Promise((resolve, reject) => {
-           let sql = 'SELECT * FROM electorate WHERE VOTE_ID = ? AND NAME = ? AND NAME_EX =?';
+           let sql = 'SELECT * FROM electorate WHERE VOTE_ID = ? AND NAME = ? AND NAME_EX = ?';
            db.query(sql, electorate).then(results => {
                resolve(results);
            }).catch(err => {
@@ -27,11 +27,11 @@ class Electorate {
     }
 
     // 인증번호 생성 및 조회
-    updateAuth(electorate) {
+    updateAuth(id) {
         let auth = this.authGenerator(Math.floor(Math.random() * 10000), 4);
         return new Promise((resolve, reject) => {
             let sql = 'UPDATE electorate SET AUTH = ? WHERE ID = ?';
-            db.query(sql, [auth, electorate.id]).then(results => {
+            db.query(sql, [auth, id]).then(results => {
                 resolve(auth);
             }).catch(err => {
                 reject(err);

@@ -67,10 +67,18 @@ userRouter.post('/queryAuthWithPhone/:voteId/', (req, res) => {
         vote_id: req.param.voteId,
         name: req.body.name,
         name_ex: req.body.name_ex,
-        phone: req.body.phone
     };
-    electorateModel.selectAuthWithPhone(user).then(result => {
-        console.log(result[0]);
+    const phone = req.body.phone;
+    electorateModel.select(user).then(result => {
+        if(phone == result[0][0].phone) {
+            electorateModel.updateAuth(result[0][0].id).then(result => {
+                // result: 생성된 인증번호를 휴대폰으로 전송
+            }).catch(err => {
+
+            });
+        } else { // 해당 투표 선거권자에 포함되지 않았음
+            
+        }
         // 휴대폰으로 인증번호 전송
     }).catch(err => {
         // 에러 페이지로 이동
