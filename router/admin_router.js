@@ -45,7 +45,6 @@ adminRouter.post('/registerCandidate', (req, res) => {
 adminRouter.post('/registerElectorate', (req, res) => {
     let electorates = new Array();
     for(let i = 0; i < req.body.data.length; i++) {
-        let auth = Math.floor(Math.random() * 10000);
         let electorate = {
             vote_id: req.body.data[i].voteId,
             name: req.body.data[i].name,
@@ -53,7 +52,7 @@ adminRouter.post('/registerElectorate', (req, res) => {
             birthday: req.body.data[i].birthday,
             phone: req.body.data[i].phone,
             image: image, // 아직
-            auth: authGenerator(auth, 4),
+            auth: null,
             vote_time: null
         };
         electorates.push(electorate);
@@ -66,10 +65,27 @@ adminRouter.post('/registerElectorate', (req, res) => {
     });
 });
 
-// 관리자가 선거권자의 인증번호 조회
+// 관리자가 선거권자의 인증번호 생성 및 조회
 adminRouter.get('/queryAuth/:voteId/', (req, res) => {
-    // 관리자인지 확인
+    // 관리자로 로그인 되었는지 확인
+    let electorate = {
+        vote_id: req.body.voteId,
+        name: req.body.name,
+        name_ex: req.body.name_ex
+    };
+    electorateModel.select(electorate).then(result => {
+        if(result[0].length > 0) {
+            electorateModel.updateAuth(result[0][0].id).then(result => {
+                // result: 생성된 인증번호
+            }).catch(err => {
 
+            });
+        } else { // 해당 투표 선거권자에 포함되지 않았음
+            
+        }
+    }).catch(err => {
+
+    });
     res.redirect('');
 });
 
@@ -77,10 +93,7 @@ adminRouter.post('/queryAuth/:voteId/', (req, res) => {
     
 });
 
-// 인증번호용 앞에 0 채우기
-function authGenerator(auth, len) {
-    auth = auth + '';
-    return auth.length >= len ? auth : new Array(len - auth.length + 1).join('0') + auth;
-}
 
+
+// authGenerator(auth, 4)
 module.exports = adminRouter;
