@@ -33,15 +33,15 @@ userRouter.get('/vote/:voteId', async (req, res) => {
 });
 
 // 선거권자 인증(일반)
-userRouter.post('/electorate/:voteId', async (req, res) => {
-    const user = {
+userRouter.post('/electorate', async (req, res) => {
+    const electorate = {
         vote_id: req.param.voteId,
         name: req.body.name,
         name_ex: req.body.name_ex,                                                                                                                                                                                                       
     };
     const auth = req.body.auth;
     try {
-        let result = await electorateModel.select(user);
+        let result = await electorateModel.select(electorate);
         if(result[0].length > 0) {
             req.session.user = {
                 vote_id: result[0][0].vote_id,
@@ -66,7 +66,7 @@ userRouter.post('/electorate/:voteId', async (req, res) => {
 });
 
 // 휴대폰 번호로 인증번호 조회
-userRouter.post('/queryAuthWithPhone/:voteId/', async (req, res) => {
+userRouter.post('/auth/:voteId/', async (req, res) => {
     const user = {
         vote_id: req.param.voteId,
         name: req.body.name,

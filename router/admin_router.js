@@ -6,7 +6,7 @@ const candidateModel = require('../model/candidate_model');
 const electorateModel = require('../model/electorate_model')
 
 // 새로운 선거 등록
-adminRouter.post('/vote', async (req, res) => {
+adminRouter.post('/admin/vote', async (req, res) => {
     const vote = {
         title: req.body.title, 
         begin_date: req.body.begin_date, 
@@ -22,7 +22,7 @@ adminRouter.post('/vote', async (req, res) => {
 });
 
 // 새로운 후보자 등록
-adminRouter.post('/candidate', async (req, res) => {
+adminRouter.post('/admin/candidate', async (req, res) => {
     let candidates = new Array();
     for(let i = 0; i < req.body.data.length; i++) {
         let candidate = {
@@ -44,7 +44,7 @@ adminRouter.post('/candidate', async (req, res) => {
 });
 
 // 새로운 선거권자 등록
-adminRouter.post('/electorate', async (req, res) => {
+adminRouter.post('/admin/electorate', async (req, res) => {
     let electorates = new Array();
     for(let i = 0; i < req.body.data.length; i++) {
         let electorate = {
@@ -68,7 +68,7 @@ adminRouter.post('/electorate', async (req, res) => {
 });
 
 // 관리자가 선거권자의 인증번호 생성 및 조회
-adminRouter.post('/auth', async (req, res) => {
+adminRouter.post('/admin/auth', async (req, res) => {
     // 관리자로 로그인 되었는지 확인
     let electorate = {
         vote_id: req.body.voteId,
@@ -84,6 +84,6 @@ adminRouter.post('/auth', async (req, res) => {
     }
 });
 
-// adminRouter
+//adminRouter
 
 module.exports = adminRouter;
