@@ -18,8 +18,12 @@ app.use(bodyParser.urlencoded({extended : true}));
 const router = require('./router/router');
 app.use(router);
 
-app.get('/', (req, res) => {
-    res.redirect('/index.html');
+app.get('/data', (req, res) => {
+    const data = {
+        lastname: "lee",
+        firstname: "chanhyuk"
+    }
+    res.json(data);
 });
 
 // Server initialize
