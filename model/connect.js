@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 const config = {
     host : '127.0.0.1',
     user : 'ch-4ml',
-    password : 'knifeark7677',
+    password : '!7rmfwkgkausshVdma',
     database : 'voting',
     dateStrings: 'date'
 };

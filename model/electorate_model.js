@@ -3,51 +3,54 @@ const db = require('./connect');
 class Electorate {
     // 선거권자 추가
     create(electorates) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let sql = 'INSERT INTO electorate SET ?';
-            db.query(sql, electorate).then(results => {
-                //result.id = results[0]['insertId'];
-                resolve(results);
-            }).catch(err => {
+            try {
+                let result = await db.query(sql, electorates);
+                resolve(result);
+            } catch(err) {
                 reject(err);
-            });
+            }
         });
     }
 
     // 선거권자 목록에 있는지 조회
     select(electorate) {
-        return new Promise((resolve, reject) => {
-           let sql = 'SELECT * FROM electorate WHERE VOTE_ID = ? AND NAME = ? AND NAME_EX = ?';
-           db.query(sql, electorate).then(results => {
-               resolve(results);
-           }).catch(err => {
-               reject(err);
-           });
+        return new Promise(async (resolve, reject) => {
+            let sql = 'SELECT * FROM electorate WHERE VOTE_ID = ? AND NAME = ? AND NAME_EX = ?';
+            try {
+                let result = await db.query(sql, electorate);
+                resolve(result);
+            } catch(err) {
+                reject(err);
+            }
         });
     }
 
     // 인증번호 생성 및 조회
     updateAuth(id) {
         let auth = this.authGenerator(Math.floor(Math.random() * 10000), 4);
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let sql = 'UPDATE electorate SET AUTH = ? WHERE ID = ?';
-            db.query(sql, [auth, id]).then(results => {
-                resolve(auth);
-            }).catch(err => {
+            try {
+                let result = await db.query(sql, [auth, id]);
+                resolve(result);
+            } catch(err) {
                 reject(err);
-            });
+            }
         });
     }
 
     // 투표 완료 시간 저장
     updateVoteTime(electorate) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let sql = 'UPDATE electorate SET VOTE_TIME = ? WHERE ID = ?';
-            db.query(sql, [electorate.vote_time, electorate.id]).then(result => {
+            try {
+                let result = await db.query(sql, [electorate.vote_time, electorate.id]);
                 resolve(result);
-            }).catch(err => {
+            } catch(err) {
                 reject(err);
-            });
+            }
         });
     }
 
