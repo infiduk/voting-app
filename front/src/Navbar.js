@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 
+import FinList from './FinList';
+
 export default class NavbarClass extends Component {
   render() {
     return (
@@ -16,7 +18,7 @@ export default class NavbarClass extends Component {
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
               <Nav.Link href='/'>진행중인 선거 목록</Nav.Link>
-              <Nav.Link href='#finList'>완료된 선거 목록</Nav.Link>
+              <Nav.Link href='/queryVote'>완료된 선거 목록</Nav.Link>
             </Nav>
             {/* 세션 있으면 */}
             <Nav>

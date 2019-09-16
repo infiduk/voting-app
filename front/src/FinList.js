@@ -3,13 +3,13 @@ import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
 import Navbar from './Navbar';
 
-export default class IngList extends Component {      
+export default class FinList extends Component {      
       render() {
           return (
             <div>
                 <Navbar />
                 <div style={{margin: 25}}>
-                    <h3>진행중인 선거 목록</h3>
+                    <h3>완료된 선거 목록</h3>
                     <div style={{marginLeft: 10, marginRight: 10}}>
                         <ListGroup variant='flush'>
                             <hr />
