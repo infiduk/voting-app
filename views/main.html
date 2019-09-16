@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Voting</title>
+    <style>
+        #topMenu {
+            height: 50px;
+            width: 1000px;
+        }
+
+        #topMenu ul li {
+            list-style: none;
+            color: black;
+            background-color: #ffffff;
+            float: left;
+            line-height: 50px;
+            vertical-align: center;
+            text-align: center;
+        }
+
+        #topMenu .menuLink {
+            text-decoration: none;
+            color: black;
+            display: block;
+            width: 150px;
+            font-size: 18px;
+            font-weight: 20;
+            letter-spacing: 2px;
+            font-family: "Koverwatch";
+        }
+
+        #topMenu .menuLink:hover {
+            color: #ff8b05;
+            background-color: #ffffff;
+        }
+
+        #copyright {
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-align: center;
+            font-family: "Koverwatch";
+        }
+    </style>
+</head>
+
+<body>
+    <div class="Menu" align="center">
+        <nav id="topMenu">
+            <ul>
+                <li><a class="menuLink" href="league_info.html" target="display_area">오버워치리그란?</a></li>
+                <li>|</li>
+                <li><a class="menuLink" href="/listTeam/1" target="display_area">팀 목록</a></li>
+                <li>|</li>
+                <li><a class="menuLink" href="/listPlayer/1" target="display_area">선수 목록</a></li>
+                <li>|</li>
+                <li><a class="menuLink" href="/list/1" target="display_area">자유 게시판</a></li>
+                <li>|</li>
+                <li><a class="menuLink" href="schedule.html" target="display_area">스케줄</a></li>
+                <li>|</li>
+                <li><a class="menuLink" href="/talk" target="display_area">실시간 대화방</a></li>
+            </ul>
+        </nav>
+        <br>
+        <article class="center">
+            <iframe name="display_area" src="https://player.twitch.tv/?channel=overwatchleague_kr" width="1000px"
+                height="1200px" frameborder="0" allowfullscreen></iframe>
+        </article>
+    </div>
+</body>
+
+<br><br>
+<footer>
+    <div id="copyright">
+        Copyright (c) 2019 WON&KANG Project. All rights reserved
+    </div>
+    </font>
+    </center>
+</footer>
+
+</html>
