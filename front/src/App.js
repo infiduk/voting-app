@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import IngList from './IngList';
+import IngList from './AuthVote';
 
 function App() {
   return (
