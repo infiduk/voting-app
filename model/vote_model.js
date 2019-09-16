@@ -17,7 +17,7 @@ class Vote {
     // 진행 중인 선거 목록 조회
     selectAll() {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT * FROM vote';
+            let sql = 'SELECT * FROM vote WHERE status = 1';
             try {
                 let result = await db.query(sql);
                 resolve(result);

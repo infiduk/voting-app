@@ -35,7 +35,7 @@ userRouter.get('/vote/:voteId', async (req, res) => {
 // 선거권자 인증(일반)
 userRouter.post('/electorate', async (req, res) => {
     const electorate = {
-        vote_id: req.param.voteId,
+        vote_id: req.body.voteId,
         name: req.body.name,
         name_ex: req.body.name_ex,                                                                                                                                                                                                       
     };
@@ -46,8 +46,7 @@ userRouter.post('/electorate', async (req, res) => {
             req.session.user = {
                 vote_id: result[0][0].vote_id,
                 name: result[0][0].name,
-                name_ex: result[0][0].name_ex,
-                vote_time: result[0][0].vote_time
+                name_ex: result[0][0].name_ex
             };
             if(result[0][0].auth != auth) { // 인증번호가 일치하지 않는 경우
                 // 인증번호 불일치 메시지 전송
@@ -78,17 +77,26 @@ userRouter.post('/auth/:voteId/', async (req, res) => {
         if(phone == result[0][0].phone) {
             let auth = await electorateModel.updateAuth(result[0][0].id);
             // 생성된 인증번호를 휴대폰으로 전송
+            // response
         } else { // 해당 투표 선거권자에 포함되지 않았음
-            
+            // response 
         }
         // response
     } catch(err) {
-        result(err);
+        res.status(500).send(err);
     }
 });
 
+// 투표
 userRouter.post('/vote', (req, res) => {
-
-})
+    // 회원이 선택한 후보자 목록 받아와서 득표수 올려줌
+    const candidates = req.body.candidates;
+    try {
+        let result = await candidateModel.updateVotes(candidates);
+        // response
+    } catch(err) {
+        res.status(500).send(err);
+    }
+});
 
 module.exports = userRouter;

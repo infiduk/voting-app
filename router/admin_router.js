@@ -48,7 +48,7 @@ adminRouter.post('/admin/electorate', async (req, res) => {
     let electorates = new Array();
     for(let i = 0; i < req.body.data.length; i++) {
         let electorate = {
-            vote_id: req.body.data[i].voteId,
+            vote_id: req.body.voteId,
             name: req.body.data[i].name,
             name_ex: req.body.data[i].name_ex,
             birthday: req.body.data[i].birthday,
@@ -83,7 +83,5 @@ adminRouter.post('/admin/auth', async (req, res) => {
         res.status(500).send(err);
     }
 });
-
-//adminRouter
 
 module.exports = adminRouter;

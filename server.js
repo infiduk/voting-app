@@ -1,7 +1,14 @@
 // Import modules
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // cross domain issue
+const corsOptions = {
+    origin: true,
+    credentials: true
+};
+
 const app = express();
+
 
 // Template Engine
 app.set('view engine', 'ejs');
@@ -13,6 +20,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.static('views'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
+app.use(cors(corsOptions));
 
 // Router
 const router = require('./router/router');

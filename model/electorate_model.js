@@ -44,9 +44,9 @@ class Electorate {
     // 투표 완료 시간 저장
     updateVoteTime(electorate) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'UPDATE electorate SET VOTE_TIME = ? WHERE ID = ?';
+            let sql = 'UPDATE electorate SET VOTE_TIME = NOW() WHERE ID = ?';
             try {
-                let result = await db.query(sql, [electorate.vote_time, electorate.id]);
+                let result = await db.query(sql, electorate.id);
                 resolve(result);
             } catch(err) {
                 reject(err);
