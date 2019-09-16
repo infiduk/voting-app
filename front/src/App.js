@@ -1,12 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Data from './Data';
+import IngList from './IngList';
 
 function App() {
   return (
     <div>
-      <Data />
+      <IngList />
     </div>
   );
 }
