@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Navbar from './Navbar';
 
-export default class IngList extends Component {
+export default class CreateVote extends Component {
     render() {
         return (
             <div>
