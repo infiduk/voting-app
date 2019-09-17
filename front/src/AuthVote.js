@@ -8,13 +8,24 @@ export default class AuthVote extends Component {
         return (
             <div>
                 <Navbar />
-                <div style={{margin: 25}}>
-                    <Button variant="outline-primary" size="lg" block>
-                        핸드폰 인증
-                    </Button>
-                    <Button variant="outline-secondary" size="lg" block>
-                        현장 인증
-                    </Button>
+                <div class='row' style={{margin: 25}}>
+                    <div style={{marginRight: 50}}>
+                        <Button
+                            variant='outline-primary'
+                            size='lg'
+                            block
+                            style={{height: '200'}}>
+                            핸드폰 인증
+                        </Button>
+                    </div>
+                    <div style={{marginLeft: 50}}>
+                        <Button
+                            variant='outline-secondary'
+                            size='lg'
+                            block>
+                            현장 인증
+                        </Button>
+                    </div>
                 </div>
             </div>
         );

@@ -1,14 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import IngList from './AuthVote';
 
-function App() {
-  return (
-    <div>
-      <IngList />
-    </div>
-  );
+import IngList from './IngList';
+import FinList from './FinList';
+import AuthVote from './AuthVote';
+import Voting from './Voting';
+
+export default class App extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <Switch>
+            <Route exact path='/' component={IngList} />
+            <Route path='/finList' component={FinList} />
+            <Route path='/voting' component={Voting} />
+
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
-
-export default App;
