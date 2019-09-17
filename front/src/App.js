@@ -15,8 +15,8 @@ export default class App extends Component {
           <Switch>
             <Route exact path='/' component={IngList} />
             <Route path='/finList' component={FinList} />
+            <Route path='/auth' component={AuthVote} />
             <Route path='/voting' component={Voting} />
-
           </Switch>
         </div>
       </Router>
