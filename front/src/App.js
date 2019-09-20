@@ -9,10 +9,13 @@ import AuthVote from './AuthVote';
 import AuthVotePhone from './AuthVotePhone';
 import AuthVoteLive from './AuthVoteLive';
 import AuthAdmin from './AuthAdmin';
+import UserList from './UserList';
 
 import CreateVote from './CreateVote';
 
 import Voting from './Voting';
+
+import ex from './Example';
 
 export default class App extends Component {
   render() {
@@ -21,7 +24,7 @@ export default class App extends Component {
         <div>
           <Switch>
             {/* 진행중인 선거 목록, 메인 */}
-            <Route exact path='/' component={IngList} />
+            <Route exact path='/' component={ex} />
             {/* 완료된 선거 목록 */}
             <Route path='/finList' component={FinList} />
             {/* 인증 */}
@@ -29,6 +32,7 @@ export default class App extends Component {
             <Route path='/authPhone' component={AuthVotePhone} />
             <Route path='/authLive' component={AuthVoteLive} />
             <Route path='/authAdmin' component={AuthAdmin} />
+            <Route path='/userList' component={UserList} />
             {/* 선거 만들기 */}
             <Route path='/createVote' component={CreateVote} />
             {/* 투표하기 */}
