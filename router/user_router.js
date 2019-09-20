@@ -88,7 +88,7 @@ userRouter.post('/auth/:voteId/', async (req, res) => {
 });
 
 // 투표
-userRouter.post('/vote', (req, res) => {
+userRouter.post('/vote', async (req, res) => {
     // 회원이 선택한 후보자 목록 받아와서 득표수 올려줌
     const candidates = req.body.candidates;
     try {

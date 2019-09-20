@@ -84,4 +84,17 @@ adminRouter.post('/admin/auth', async (req, res) => {
     }
 });
 
+// 관리자 계정 생성
+adminRouter.post('/admin', async (req, res) => {
+    
+});
+
+// 로그인
+adminRouter.post('/login', async (req, res) => {
+    let admin = {
+        uid: req.body.uid,
+        password: req.body.password
+    }
+});
+
 module.exports = adminRouter;
