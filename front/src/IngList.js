@@ -28,7 +28,7 @@ export default class IngList extends Component {
                                 </div>
                                 <h5 style={{textAlign: 'right'}}>2019.09.16 ~ 2019.09.30</h5>
                             </ListGroup.Item>
-                            <ListGroup.Item action href='#link2'>
+                            <ListGroup.Item action href='/Voting'>
                                 <div className='row'>
                                     <img
                                         alt=''

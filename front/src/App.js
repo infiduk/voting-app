@@ -14,6 +14,7 @@ import UserList from './UserList';
 import CreateVote from './CreateVote';
 
 import Voting from './Voting';
+import VoteResult from './VoteResult';
 
 import ex from './Example';
 
@@ -24,7 +25,7 @@ export default class App extends Component {
         <div>
           <Switch>
             {/* 진행중인 선거 목록, 메인 */}
-            <Route exact path='/' component={Voting} />
+            <Route exact path='/' component={FinList} />
             {/* 완료된 선거 목록 */}
             <Route path='/finList' component={FinList} />
             {/* 인증 */}
@@ -37,6 +38,8 @@ export default class App extends Component {
             <Route path='/createVote' component={CreateVote} />
             {/* 투표하기 */}
             <Route path='/voting' component={Voting} />
+            {/* 투표 완료 상세정보*/}
+            <Route path='/voteResult' component={VoteResult} />
           </Switch>
         </div>
       </Router>

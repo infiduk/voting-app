@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 import Navbar from './Navbar';
 
@@ -55,11 +55,19 @@ export default class CreateVote extends Component {
                                 다음
                             </Button> */}
                             <Form.Group controlId='limit'>
-                                <Form.Label>투표 선출 인원</Form.Label>
-                                <Form.Control type='number' size='lg' placeholder='투표 선출 인원 수를 입력하세요.' />
+                                <Form.Label>후보자 명단 파일(.xlsx)</Form.Label>
+                                <Form.Control type="file" name="file" onChange={this.onChangeHandler}/>
                             </Form.Group>
-                            <input type="file" name="file" onChange={this.onChangeHandler}/>
+                            <Form.Group controlId='limit'>
+                                <Form.Label>투표자 명단 파일(.xlsx)</Form.Label>
+                                <Form.Control type="file" name="file" onChange={this.onChangeHandler}/>
+                            </Form.Group>
                         </Form>
+                        <Button variant='primary' type='submit' size='lg'
+                                style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}
+                                onClick={this.handleScrollToStats}>
+                                확인
+                        </Button>
                     </div>
                     {/* <div ref={this.statsRef}>
                         <Divider horizontal> Statistics </Divider>

@@ -72,9 +72,9 @@ export default class Voting extends Component {
                     <h3>선거 제목 불러와서 넣기</h3>
                     {/* 자동으로 따라다니는 애로 넣기 */}
                     <h4 style={{ margin: 10 }}>투표 인원 : 몇명 / 몇명</h4>
-                    <Form inline style={{ margin: 10 }}>
-                        <FormControl type="text" placeholder="검색할 후보자의 이름을 입력하세요." className="mr-sm-2" style={{ width: '70%' }} />
-                        <Button variant="primary">검색</Button>
+                    <Form inline style={{ marginBottom: 10 }}>
+                        <FormControl type='text' placeholder='검색할 후보자의 이름을 입력하세요.' className='mr-sm-2' style={{ width: '70%' }} />
+                        <Button variant='primary'>검색</Button>
                     </Form>
                     <div className='card' style={{ padding: '5px', backgroundColor: '#fafafa' }}>
                         <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={() => this.toggle(0)}>
@@ -98,6 +98,9 @@ export default class Voting extends Component {
                             </Card.Body>
                         </Card>
                     </div>
+                    <Form>
+                        <Button variant='primary' size='lg' style={{ marginTop: 25 }} block>확인</Button>
+                    </Form>
                 </div>
             </div>
         )

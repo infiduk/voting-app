@@ -13,7 +13,7 @@ export default class FinList extends Component {
                     <div style={{ marginLeft: 10, marginRight: 10 }}>
                         <ListGroup variant='flush'>
                             <hr />
-                            <ListGroup.Item action href='/voting'>
+                            <ListGroup.Item action href='/voteResult'>
                                 <div className='row'>
                                     <img
                                         alt=''
