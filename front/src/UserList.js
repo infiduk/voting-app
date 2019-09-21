@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Navbar from './Navbar';
 
-export default class Admin extends Component {
+export default class UserList extends Component {
     render() {
         return (
             <div>

@@ -3,7 +3,7 @@ import { Accordion, Button, Card, FormControl, InputGroup } from 'react-bootstra
 
 import Navbar from './Navbar';
 
-export default class IngList extends Component {
+export default class AuthVotePhone extends Component {
     render() {
         return (
             <div>

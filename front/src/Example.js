@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import ReactFileReader from 'react-file-reader';
-import { OutTable, ExcelRenderer } from 'react-excel-renderer';
+import { ExcelRenderer } from 'react-excel-renderer';
 
 export default class Example extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     handleChange(e) {
         let file = e.target.files[0];

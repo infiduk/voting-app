@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 
 import Navbar from './Navbar';
 
-export default class IngList extends Component {
+export default class AuthAdmin extends Component {
     render() {
         return (
             <div>
