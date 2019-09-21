@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
 import ReactFileReader from 'react-file-reader';
-import { ExcelRenderer } from 'react-excel-renderer';
+import { OutTable, ExcelRenderer } from 'react-excel-renderer';
 
 export default class Example extends Component {
-
-    handleChange(e) {
-        let file = e.target.files[0];
-        let fileReader = new FileReader();
-        fileReader.onload = () => {
-            console.log(fileReader.result);
-        };
-        fileReader.readAsText(file);
-    }
-
-    handleFiles = files => {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            // Use reader.result
-            console.log(reader.result)
+    constructor(props) {
+        super(props)
+        this.state = {
+            userName: '',
+            userName_ex: '',
+            userPhone: '',
         }
-        reader.readAsBinaryString(files);
     }
 
     fileHandler = (event) => {
@@ -36,6 +26,7 @@ export default class Example extends Component {
                     rows: resp.rows
                 });
                 console.log(resp.cols);
+                console.log(JSON.stringify(resp.rows));
                 console.log(resp.rows[0][0]);
             }
 
@@ -48,19 +39,27 @@ export default class Example extends Component {
                 phone: resp.rows[1][2],
             }
 
-            console.log(xlsxJson);
+            console.log(JSON.stringify(xlsxJson));
         });
     }
 
     render() {
         return (
             <div>
-                <input type="file" onChange={this.handleChange.bind(this)} />
-                <ReactFileReader handleFiles={this.handleFiles} fileTypes={'.xlsx'}>
-                    <button className='btn'>Upload</button>
-                </ReactFileReader>
                 <input type="file" onChange={this.fileHandler.bind(this)} style={{ "padding": "10px" }} />
             </div>
         );
+    }
+}
+
+class PrintClass extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <li>{this.props.name} {this.props.name_ex} {this.props.phone}</li>
+        )
     }
 }

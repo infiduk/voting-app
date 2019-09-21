@@ -24,7 +24,7 @@ export default class App extends Component {
         <div>
           <Switch>
             {/* 진행중인 선거 목록, 메인 */}
-            <Route exact path='/' component={IngList} />
+            <Route exact path='/' component={Voting} />
             {/* 완료된 선거 목록 */}
             <Route path='/finList' component={FinList} />
             {/* 인증 */}
