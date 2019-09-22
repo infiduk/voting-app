@@ -30,9 +30,9 @@ app.get('/', (req, res) => {
     res.redirect('/index.html');
 });
 
-// app.get('/testExpress', (req, res) => {
-//     res.send({ express: 'Hello From Express' });
-// });
+app.get('/testExpress', (req, res) => {
+    res.send({ express: 'Hello From Express' });
+});
 
 // app.post('/sendExpress', (req, res) => {
 //     console.log(req.body);
