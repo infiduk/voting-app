@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Card, Form, FormControl } from 'react-bootstrap';
-import update from 'react-addons-update';
 
 import Navbar from './Navbar';
 

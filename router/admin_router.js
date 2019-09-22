@@ -2,19 +2,24 @@ const express = require('express');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const adminRouter = express.Router();
+const voteModel = require('../model/vote_model');
 const candidateModel = require('../model/candidate_model');
 const electorateModel = require('../model/electorate_model')
 
 // 새로운 선거 등록
 adminRouter.post('/admin/vote', async (req, res) => {
+    console.log("안으로 들어옴 1");
     const vote = {
         title: req.body.title, 
         begin_date: req.body.begin_date, 
         end_date: req.body.end_date,
         limit: req.body.limit
     };
+    console.log(req.body.title + "타이틀2" + req.body.begin_date + req.body.end_date + req.body.limit);
     try {
+        console.log("try문 안으로 들어옴 3");
         let result = await voteModel.create(vote);
+        consle.log("try 끝 4");
         // response
     } catch(err) {
         res.status(500).send(err);

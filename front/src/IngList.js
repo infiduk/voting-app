@@ -3,14 +3,14 @@ import { ListGroup } from 'react-bootstrap';
 
 import Navbar from './Navbar';
 
-export default class IngList extends Component {      
-      render() {
-          return (
+export default class IngList extends Component {
+    render() {
+        return (
             <div>
                 <Navbar />
-                <div style={{margin: 25}}>
+                <div style={{ margin: 25 }}>
                     <h3>진행중인 선거 목록</h3>
-                    <div style={{marginLeft: 10, marginRight: 10}}>
+                    <div style={{ marginLeft: 10, marginRight: 10 }}>
                         <ListGroup variant='flush'>
                             <hr />
                             {/* 세션 없으면 */}
@@ -22,11 +22,11 @@ export default class IngList extends Component {
                                         src={require('./images/jeongeui_logo_icon.png')}
                                         width='30'
                                         height='30'
-                                        style={{marginRight: 10}}
+                                        style={{ marginRight: 10 }}
                                     />
                                     <h4>제 2회 교회 총 선거선거선거선</h4>
                                 </div>
-                                <h5 style={{textAlign: 'right'}}>2019.09.16 ~ 2019.09.30</h5>
+                                <h5 style={{ textAlign: 'right' }}>2019.09.16 ~ 2019.09.30</h5>
                             </ListGroup.Item>
                             <ListGroup.Item action href='/Voting'>
                                 <div className='row'>
@@ -35,11 +35,11 @@ export default class IngList extends Component {
                                         src={require('./images/jeongeui_logo_icon.png')}
                                         width='30'
                                         height='30'
-                                        style={{marginRight: 10}}
+                                        style={{ marginRight: 10 }}
                                     />
                                     <h4>제 2회 교회 총 선거선거선거선</h4>
                                 </div>
-                                <h5 style={{textAlign: 'right'}}>2019.09.16 ~ 2019.09.30</h5>
+                                <h5 style={{ textAlign: 'right' }}>2019.09.16 ~ 2019.09.30</h5>
                             </ListGroup.Item>
                             <ListGroup.Item action href='#link3'>
                                 <div className='row'>
@@ -48,11 +48,11 @@ export default class IngList extends Component {
                                         src={require('./images/jeongeui_logo_icon.png')}
                                         width='30'
                                         height='30'
-                                        style={{marginRight: 10}}
+                                        style={{ marginRight: 10 }}
                                     />
                                     <h4>제 2회 교회 총 선거선거선거선</h4>
                                 </div>
-                                <h5 style={{textAlign: 'right'}}>2019.09.16 ~ 2019.09.30</h5>
+                                <h5 style={{ textAlign: 'right' }}>2019.09.16 ~ 2019.09.30</h5>
                             </ListGroup.Item>
                             <hr />
                         </ListGroup>
