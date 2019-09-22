@@ -16,7 +16,7 @@ userRouter.use(session({
 userRouter.get('/vote', async (req, res) => {
     try {
         let result = await voteModel.selectAll();
-        // response
+        res.status(200).send(result[0][0]);
     } catch(err) {
         res.status(500).send(err);
     }
@@ -26,7 +26,7 @@ userRouter.get('/vote', async (req, res) => {
 userRouter.get('/vote/:voteId', async (req, res) => {
     try {
         let result = await voteModel.select(req.params.voteId);
-        // response
+        res.status(200).send(result[0][0]);
     } catch(err) {
         res.status(500).send(err);
     }
