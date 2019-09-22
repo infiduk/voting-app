@@ -33,8 +33,8 @@ class Electorate {
         return new Promise(async (resolve, reject) => {
             let sql = 'UPDATE electorate SET AUTH = ? WHERE ID = ?';
             try {
-                let result = await db.query(sql, [auth, id]);
-                resolve(result);
+                await db.query(sql, [auth, id]);
+                resolve(auth);
             } catch(err) {
                 reject(err);
             }
