@@ -1,6 +1,5 @@
 import React, { Component, createRef } from 'react';
 import { OutTable, ExcelRenderer } from 'react-excel-renderer';
-import update from 'react-addons-update';
 import { Button, Card, Col, Form, FormGroup, InputGroup } from 'react-bootstrap';
 
 import Navbar from './Navbar';
@@ -10,18 +9,17 @@ export default class CreateVote extends Component {
         super(props);
         this.statsRef = createRef();
         this.state = {
-            response: '',
-            post: '',
-            responseToPost: '',
-
             title: '',
             begin_date: '',
             end_date: '',
             limit: '',
+            vote_id: '',
 
             name: '',
             name_ex: '',
             phone: '',
+            candidateList: '',
+            electorateList: '',
 
             isOpen: false,
             dataLoaded: false,
@@ -29,15 +27,10 @@ export default class CreateVote extends Component {
             uploadedFileName: '',
             rows: null,
             cols: null,
-
-            xlsxJson: {
-                name: '',
-                name_ex: '',
-                phone: '',
-            }
         }
 
-        this.fileHandler = this.fileHandler.bind(this);
+        this.fileCandidateHandler = this.fileCandidateHandler.bind(this);
+        this.fileElectorateHandler = this.fileElectorateHandler.bind(this);
         this.toggle = this.toggle.bind(this);
         this.openFileBrowser = this.openFileBrowser.bind(this);
         this.renderFile = this.renderFile.bind(this);
@@ -59,8 +52,6 @@ export default class CreateVote extends Component {
             'limit': this.state.limit
         };
 
-        console.log(voteInfo);
-
         const response = await fetch('/admin/vote', {
             method: 'POST',
             headers: {
@@ -70,23 +61,22 @@ export default class CreateVote extends Component {
         });
 
         console.log(response);
+        this.setState({ vote_id: response.data });
     };
 
     // 새로운 후보자 등록 api fetch
     handleCreateVoteCandidateSubmit = async e => {
         e.preventDefault();
-
-
         const response = await fetch('/admin/candidate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ post: this.state.post }),
+            body: JSON.stringify({
+                'vote_id': this.state.vote_id,
+                'candidates': this.state.candidateList
+            })
         });
-        const body = await response.text();
-
-        this.setState({ responseToPost: body });
     };
 
     // 새로운 선거권자 등록 api fetch
@@ -97,11 +87,11 @@ export default class CreateVote extends Component {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ post: this.state.post }),
+            body: {
+                'votd_id': this.state.vote_id,
+                'electorate': this.state.electorateList
+            }
         });
-        const body = await response.text();
-
-        this.setState({ responseToPost: body });
     };
 
     handleScrollToStats = () => {
@@ -123,37 +113,36 @@ export default class CreateVote extends Component {
                     rows: resp.rows
                 });
             }
-
-            var count = Object.keys(resp.rows).length;
-            console.log(count);
-
-            let jsonArray = JSON.stringify(this.state.rows);
-            console.log(jsonArray);
-
-            console.log(JSON.stringify(this.state.rows));
-
-            for (let i = 1; i < count; i++) {
-                let newState = update(this.state, {
-                    xlsxJson: {
-                        $push: [{"name": resp.rows[`${i}`][0],
-                        "name_ex": [`${i}`][1], 
-                        
-                    }]
-                    }
-                });
-                this.setState(newState);
-                console.log(JSON.stringify(xlsxJson));
-            }
-            console.log(xlsxJson);
+            this.setState({ candidateList: JSON.stringify(resp.rows) });
         });
     }
 
-    fileHandler = (event) => {
+    fileCandidateHandler = (event) => {
         if (event.target.files.length) {
             let fileObj = event.target.files[0];
             let fileName = fileObj.name;
 
-            //check for file extension and pass only if it is .xlsx and display error message otherwise
+            if (fileName.slice(fileName.lastIndexOf('.') + 1) === "xlsx") {
+                this.setState({
+                    uploadedFileName: fileName,
+                    isFormInvalid: false
+                });
+                this.renderFile(fileObj)
+            }
+            else {
+                this.setState({
+                    isFormInvalid: true,
+                    uploadedFileName: ""
+                })
+            }
+        }
+    }
+
+    fileElectorateHandler = (event) => {
+        if (event.target.files.length) {
+            let fileObj = event.target.files[0];
+            let fileName = fileObj.name;
+
             if (fileName.slice(fileName.lastIndexOf('.') + 1) === "xlsx") {
                 this.setState({
                     uploadedFileName: fileName,
@@ -196,7 +185,6 @@ export default class CreateVote extends Component {
                         alignSelf: 'center',
                         alignItems: 'center'
                     }}>
-                        <p>{this.state.responseToPost}</p>
                         <h3 style={{ marginTop: 30, marginBottom: 20, textAlign: 'center' }}>선거 만들기</h3>
                         <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleCreateVoteSubmit}>
                             <Form.Group controlId='title'>
@@ -220,56 +208,52 @@ export default class CreateVote extends Component {
                                 다음
                             </Button>
                         </Form>
-                        <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleCreateCandidateSubmit}>
+                        <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleCreateVoteCandidateSubmit}>
                             <h6 style={{ marginBottom: 10 }}>후보자 파일 등록</h6>
-                            <Form>
-                                <FormGroup row='true'>
-                                    <Col>
-                                        <InputGroup>
-                                            <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openFileBrowser.bind(this)}><i className='cui-file'></i> 파일 등록</Button>
-                                            <input type='file' hidden onChange={this.fileHandler.bind(this)} ref={this.fileInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
-                                            <input type='text' className='form-control' value={this.state.uploadedFileName} readOnly invalid='false' />
-                                        </InputGroup>
-                                    </Col>
-                                </FormGroup>
-                            </Form>
-                            {this.state.dataLoaded &&
-                                <div style={{ margin: 20 }}>
-                                <Card body outline color='secondary' className='restrict-card'>
-                                    <OutTable data={this.state.rows} columns={this.state.cols} tableClassName='ExcelTable2007' />
-                                </Card>
-                            </div>}
-                            <Button variant='primary' type='submit' size='lg'
-                            style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}>
-                            다음
-                            </Button>
-                        </Form>
-                    <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleCreateElectorateSubmit}>
-                        <h6 style={{ marginBottom: 10 }}>선거권자 파일 등록</h6>
-                        <Form>
                             <FormGroup row='true'>
                                 <Col>
                                     <InputGroup>
                                         <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openFileBrowser.bind(this)}><i className='cui-file'></i> 파일 등록</Button>
-                                        <input type='file' hidden onChange={this.fileHandler.bind(this)} ref={this.fileInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
+                                        <input type='file' hidden onChange={this.fileCandidateHandler.bind(this)} ref={this.fileInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
                                         <input type='text' className='form-control' value={this.state.uploadedFileName} readOnly invalid='false' />
                                     </InputGroup>
                                 </Col>
                             </FormGroup>
-                        </Form>
-                        {this.state.dataLoaded &&
-                            <div style={{ margin: 20 }}>
-                                <Card body outline color='secondary' className='restrict-card'>
-                                    <OutTable data={this.state.rows} columns={this.state.cols} tableClassName='ExcelTable2007' />
-                                </Card>
-                            </div>}
-                        <Button variant='primary' type='submit' size='lg'
-                            style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}>
-                            다음
+                            {this.state.dataLoaded &&
+                                <div style={{ margin: 20 }}>
+                                    <Card body outline='true' className='restrict-card'>
+                                        <OutTable data={this.state.rows} columns={this.state.cols} tableClassName='ExcelTable2007' />
+                                    </Card>
+                                </div>}
+                            <Button variant='primary' type='submit' size='lg'
+                                style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}>
+                                다음
                             </Button>
-                    </Form>
+                        </Form>
+                        <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleCreateVoteElectorateSubmit}>
+                            <h6 style={{ marginBottom: 10 }}>선거권자 파일 등록</h6>
+                            <FormGroup row='true'>
+                                <Col>
+                                    <InputGroup>
+                                        <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openFileBrowser.bind(this)}><i className='cui-file'></i> 파일 등록</Button>
+                                        <input type='file' hidden onChange={this.fileElectorateHandler.bind(this)} ref={this.fileInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
+                                        <input type='text' className='form-control' value={this.state.uploadedFileName} readOnly invalid='false' />
+                                    </InputGroup>
+                                </Col>
+                            </FormGroup>
+                            {this.state.dataLoaded &&
+                                <div style={{ margin: 20 }}>
+                                    <Card body outline='true' className='restrict-card'>
+                                        <OutTable data={this.state.rows} columns={this.state.cols} tableClassName='ExcelTable2007' />
+                                    </Card>
+                                </div>}
+                            <Button variant='primary' type='submit' size='lg'
+                                style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}>
+                                다음
+                            </Button>
+                        </Form>
+                    </div>
                 </div>
-            </div>
             </div >
         )
     }

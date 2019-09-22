@@ -3,18 +3,13 @@ const db = require('./connect');
 class Vote {
     // 새 선거 생성
     create(vote) {
-        console.log("자 여기 들어왔읍니까 3-1");
         return new Promise(async (resolve, reject) => {
-            console.log("프로미스 안 3-2");
             let sql = 'INSERT INTO vote SET ?';
             try {
-                console.log("트라이 안 3-3" + JSON.stringify(vote));
                 let result = await db.query(sql, vote);
-                console.log("sql이 먹었읍니까 3-4");
                 resolve(result);
-                console.log("resolve 다했닼~~~~ 3-5");
             } catch(err) {
-                console.log("되긴 무슨 3-6");
+                console.log(err);
                 reject(err);
             }
         });
@@ -23,12 +18,9 @@ class Vote {
     // 진행 중인 선거 목록 조회
     selectAll() {
         return new Promise(async (resolve, reject) => {
-            console.log('2-1 안에 들어옴');
             let sql = 'SELECT * FROM vote WHERE status = 1';
             try {
-                console.log('2-2 트라이 안에 들어옴');
                 let result = await db.query(sql);
-                console.log('2-3 xmdkld트라이끗 안에 들어옴');
                 resolve(result);
             } catch(err) {
                 reject(err);

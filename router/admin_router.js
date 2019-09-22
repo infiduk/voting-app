@@ -15,24 +15,21 @@ adminRouter.use(session({
 
 // 새로운 선거 등록
 adminRouter.post('/admin/vote', async (req, res) => {
-    console.log('1 안으로 들어옴');
     let data;
+    console.log(req.body);
     const vote = {
         title: req.body.title, 
         begin_date: req.body.begin_date, 
         end_date: req.body.end_date,
         limit: req.body.limit
     };
-    console.log(req.body.title + '타이틀2' + req.body.begin_date + req.body.end_date + req.body.limit);
     try {
-        console.log('try문 안으로 들어옴 3');
-        await voteModel.create(vote);
-        data = { status: true, msg: '선거 등록 성공' };
+        let result = await voteModel.create(vote);
+        data = { status: true, msg: '선거 등록 성공', data: result[0]['insertId'] };
         res.status(200).send(data);
-        consle.log('try 끝 4');
     } catch(err) {
         data = { status: false, msg: '선거 등록 실패' };
-        console.log('try 안됨 5');
+        console.log(data)
         res.status(500).send(data);
     }
 });
@@ -40,20 +37,20 @@ adminRouter.post('/admin/vote', async (req, res) => {
 // 새로운 후보자 등록
 adminRouter.post('/admin/candidate', async (req, res) => {
     let data;
+    let candidatesList = JSON.parse(req.body.candidates);
     let candidates = new Array();
-    for(let i = 0; i < req.body.data.length; i++) {
+    for(var i = 1; i < candidatesList.length; i++) {
         let candidate = {
-            vote_id: req.body.data[i].voteId,
-            name: req.body.data[i].name,
-            name_ex: req.body.data[i].name_ex,
-            phone: req.body.data[i].phone,
-            image: image,
-            votes: 0
+            vote_id: 1,
+            name: candidatesList[i][0],
+            name_ex: candidatesList[i][1],
+            phone: candidatesList[i][2]
         };
         candidates.push(candidate);
     }
+    console.log(candidates);
     try {
-        await candidateModel.registerCandidate(candidates);
+        await candidateModel.create(candidates);
         data = { status: true, msg: '후보자 등록 성공' };
         res.status(200).send(data);
     } catch(err) {

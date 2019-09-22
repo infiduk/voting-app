@@ -1,6 +1,6 @@
 const mysql = require('mysql2/promise');
 const config = {
-    host : 'ch-4ml.iptime.org',
+    host : 'localhost',
     user : 'ch-4ml',
     password : 'knifeark7677',
     database : 'voting',
