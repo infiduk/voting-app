@@ -10,7 +10,7 @@ const process = require('process');
 
 // 진행 중인 선거 목록 조회
 userRouter.get('/vote', async (req, res) => {
-    console.log('1 안에 들어옴');
+    console.log('1 안에 들어옴1111');
     let data;
     try {
         console.log('2 트라이안에 들어옴');
