@@ -6,7 +6,6 @@ class Candidate {
         return new Promise(async (resolve, reject) => {
             let stmt = "";
             let candidate;
-            console.log(candidates.length);
             for(var i = 0; i < candidates.length; i++) {
                 candidate = candidates[i];
                 stmt += '(' + candidate.vote_id + ', "' + candidate.name + '", "' + candidate.name_ex + '", "' + candidate.phone + '")';

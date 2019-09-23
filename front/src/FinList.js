@@ -4,6 +4,27 @@ import { ListGroup } from 'react-bootstrap';
 import Navbar from './Navbar';
 
 export default class FinList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            voteList: [],
+        }
+    }
+
+    componentDidMount() {
+        this.callApi()
+            .then(res => this.setState({ voteList: res.data }))
+            .catch(err => console.log(err));
+    }
+
+    callApi = async () => {
+        const response = await fetch('/vote');
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+
+        return body;
+    };
+
     render() {
         return (
             <div>

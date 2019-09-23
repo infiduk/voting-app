@@ -28,6 +28,19 @@ class Vote {
         });
     }
 
+    // 완료된 선거 목록 조회
+    selectFinAll() {
+        return new Promise(async (resolve, reject) => {
+            let sql = 'SELECT * FROM vote WHERE status = 0';
+            try {
+                let result = await db.query(sql);
+                resolve(result);
+            } catch(err) {
+                reject(err);
+            }
+        });
+    }
+
     // 진행 중인 선거 선택
     select(voteId) {
         return new Promise(async (resolve, reject) => {
