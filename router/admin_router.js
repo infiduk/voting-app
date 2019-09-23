@@ -38,6 +38,7 @@ adminRouter.post('/admin/vote', async (req, res) => {
 adminRouter.post('/admin/candidate', async (req, res) => {
     let data;
     let candidatesList = JSON.parse(req.body.candidates);
+    console.log(candidatesList);
     let candidates = new Array();
     for(var i = 1; i < candidatesList.length; i++) {
         let candidate = {
@@ -62,26 +63,26 @@ adminRouter.post('/admin/candidate', async (req, res) => {
 // 새로운 선거권자 등록
 adminRouter.post('/admin/electorate', async (req, res) => {
     let data;
+    console.log(req.body);
+    console.log(req.body.electorates);
+    let electoratesList = JSON.parse(req.body.electorates);
     let electorates = new Array();
-    for(let i = 0; i < req.body.data.length; i++) {
+    for(var i = 1; i < electoratesList.length; i++) {
         let electorate = {
-            vote_id: req.body.voteId,
-            name: req.body.data[i].name,
-            name_ex: req.body.data[i].name_ex,
-            birthday: req.body.data[i].birthday,
-            phone: req.body.data[i].phone,
-            image: image, // 아직
-            auth: null,
-            vote_time: null
+            vote_id: 1,
+            name: electoratesList[i][0],
+            name_ex: electoratesList[i][1],
+            phone: electoratesList[i][2]
         };
         electorates.push(electorate);
     }
+    console.log(electorates);
     try {
-        await electorateModel.registerElectorate(electorates);
-        data = { status: true, msg: '선거권자 등록 성공' };
+        await electorateModel.create(electorates);
+        data = { status: true, msg: '후보자 등록 성공' };
         res.status(200).send(data);
     } catch(err) {
-        data = { status: false, msg: '선거권자 등록 실패' };
+        data = { status: false, msg: '후보자 등록 실패' };
         res.status(500).send(data);
     }
 });

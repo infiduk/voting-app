@@ -12,12 +12,11 @@ const process = require('process');
 userRouter.get('/vote', async (req, res) => {
     let data;
     try {
-        console.log('2 트라이안에 들어옴');
         let result = await voteModel.selectAll();
         data = {
             result: true,
             msg: '진행 중인 선거 목록 조회 성공',
-            data: result[0][0]
+            data: result[0]
         }
         res.status(200).send(data);
     } catch(err) {
@@ -135,6 +134,26 @@ userRouter.post('/vote', async (req, res) => {
         res.status(200).send(data);
     } catch(err) {
         data = { status: false, msg: '투표 실패' };
+        res.status(500).send(data);
+    }
+});
+
+// 진행 중인 선거 목록 조회
+userRouter.get('/vote', async (req, res) => {
+    let data;
+    try {
+        let result = await voteModel.selectAll();
+        data = {
+            result: true,
+            msg: '진행 중인 선거 목록 조회 성공',
+            data: result[0]
+        }
+        res.status(200).send(data);
+    } catch(err) {
+        data = {
+            result: false,
+            msg: `진행 중인 선거 목록 조회 실패: ${err}`
+        }
         res.status(500).send(data);
     }
 });

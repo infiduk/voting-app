@@ -22,19 +22,27 @@ export default class CreateVote extends Component {
             electorateList: '',
 
             isOpen: false,
-            dataLoaded: false,
-            isFormInvalid: false,
-            uploadedFileName: '',
-            rows: null,
-            cols: null,
+            canDataLoaded: false,
+            eleDataLoaded: false,
+            isFormInvalidCan: false,
+            uploadedCanFileName: '',
+            isFormInvalidEle: false,
+            uploadedEleFileName: '',
+            canRows: null,
+            canCols: null,
+            eleRows: null,
+            eleCols: null,
         }
 
         this.fileCandidateHandler = this.fileCandidateHandler.bind(this);
         this.fileElectorateHandler = this.fileElectorateHandler.bind(this);
         this.toggle = this.toggle.bind(this);
-        this.openFileBrowser = this.openFileBrowser.bind(this);
-        this.renderFile = this.renderFile.bind(this);
-        this.fileInput = React.createRef();
+        this.openCanFileBrowser = this.openCanFileBrowser.bind(this);
+        this.openEleFileBrowser = this.openEleFileBrowser.bind(this);
+        this.renderCandidateFile = this.renderCandidateFile.bind(this);
+        this.renderElectorateFile = this.renderElectorateFile.bind(this);
+        this.fileCanInput = React.createRef();
+        this.fileEleInput = React.createRef();
     }
 
     handleChange = (e) => {
@@ -60,14 +68,14 @@ export default class CreateVote extends Component {
             body: JSON.stringify(voteInfo),
         });
 
-        console.log(response);
         this.setState({ vote_id: response.data });
+        console.log(response.data);
     };
 
     // 새로운 후보자 등록 api fetch
     handleCreateVoteCandidateSubmit = async e => {
         e.preventDefault();
-        const response = await fetch('/admin/candidate', {
+        await fetch('/admin/candidate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -82,15 +90,15 @@ export default class CreateVote extends Component {
     // 새로운 선거권자 등록 api fetch
     handleCreateVoteElectorateSubmit = async e => {
         e.preventDefault();
-        const response = await fetch('/admin/electorate', {
+        await fetch('/admin/electorate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: {
+            body: JSON.stringify({
                 'votd_id': this.state.vote_id,
-                'electorate': this.state.electorateList
-            }
+                'electorates': this.state.electorateList
+            })
         });
     };
 
@@ -100,7 +108,8 @@ export default class CreateVote extends Component {
         })
     }
 
-    renderFile = (fileObj) => {
+    renderCandidateFile = (fileObj) => {
+        console.log('1');
         //just pass the fileObj as parameter
         ExcelRenderer(fileObj, (err, resp) => {
             if (err) {
@@ -108,12 +117,30 @@ export default class CreateVote extends Component {
             }
             else {
                 this.setState({
-                    dataLoaded: true,
-                    cols: resp.cols,
-                    rows: resp.rows
+                    canDataLoaded: true,
+                    canCols: resp.cols,
+                    canRows: resp.rows
                 });
             }
             this.setState({ candidateList: JSON.stringify(resp.rows) });
+        });
+    }
+
+    renderElectorateFile = (fileObj) => {
+        console.log('2');
+        //just pass the fileObj as parameter
+        ExcelRenderer(fileObj, (err, resp) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                this.setState({
+                    eleDataLoaded: true,
+                    eleCols: resp.cols,
+                    eleRows: resp.rows
+                });
+            }
+            this.setState({ electorateList: JSON.stringify(resp.rows) });
         });
     }
 
@@ -124,15 +151,15 @@ export default class CreateVote extends Component {
 
             if (fileName.slice(fileName.lastIndexOf('.') + 1) === "xlsx") {
                 this.setState({
-                    uploadedFileName: fileName,
-                    isFormInvalid: false
+                    uploadedCanFileName: fileName,
+                    isFormInvalidCan: false
                 });
-                this.renderFile(fileObj)
+                this.renderCandidateFile(fileObj)
             }
             else {
                 this.setState({
-                    isFormInvalid: true,
-                    uploadedFileName: ""
+                    isFormInvalidCan: true,
+                    uploadedCanFileName: ""
                 })
             }
         }
@@ -145,15 +172,15 @@ export default class CreateVote extends Component {
 
             if (fileName.slice(fileName.lastIndexOf('.') + 1) === "xlsx") {
                 this.setState({
-                    uploadedFileName: fileName,
-                    isFormInvalid: false
+                    uploadedEleFileName: fileName,
+                    isFormInvalidEle: false
                 });
-                this.renderFile(fileObj)
+                this.renderElectorateFile(fileObj)
             }
             else {
                 this.setState({
-                    isFormInvalid: true,
-                    uploadedFileName: ""
+                    isFormInvalidEle: true,
+                    uploadedEleFileName: ""
                 })
             }
         }
@@ -165,8 +192,16 @@ export default class CreateVote extends Component {
         });
     }
 
-    openFileBrowser = () => {
-        this.fileInput.current.click();
+    openCanFileBrowser = () => {
+        this.fileCanInput.current.click();
+    }
+
+    openEleFileBrowser = () => {
+        this.fileEleInput.current.click();
+    }
+
+    handleSearch = () => {
+        window.location.assign('/');
     }
 
     render() {
@@ -179,7 +214,7 @@ export default class CreateVote extends Component {
                         marginTop: 20,
                         marginBotom: 20,
                         width: '80vw',
-                        height: '1000px',
+                        height: '80%',
                         backgroundColor: '#fafafa',
                         justifyContent: 'center',
                         alignSelf: 'center',
@@ -213,16 +248,16 @@ export default class CreateVote extends Component {
                             <FormGroup row='true'>
                                 <Col>
                                     <InputGroup>
-                                        <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openFileBrowser.bind(this)}><i className='cui-file'></i> 파일 등록</Button>
-                                        <input type='file' hidden onChange={this.fileCandidateHandler.bind(this)} ref={this.fileInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
-                                        <input type='text' className='form-control' value={this.state.uploadedFileName} readOnly invalid='false' />
+                                        <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openCanFileBrowser.bind(this)}> 파일 등록</Button>
+                                        <input type='file' hidden onChange={this.fileCandidateHandler.bind(this)} ref={this.fileCanInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
+                                        <input type='text' className='form-control' value={this.state.uploadedCanFileName} readOnly invalid='false' />
                                     </InputGroup>
                                 </Col>
                             </FormGroup>
-                            {this.state.dataLoaded &&
+                            {this.state.canDataLoaded &&
                                 <div style={{ margin: 20 }}>
                                     <Card body outline='true' className='restrict-card'>
-                                        <OutTable data={this.state.rows} columns={this.state.cols} tableClassName='ExcelTable2007' />
+                                        <OutTable data={this.state.canRows} columns={this.state.canCols} tableClassName='ExcelTable2007' />
                                     </Card>
                                 </div>}
                             <Button variant='primary' type='submit' size='lg'
@@ -235,24 +270,27 @@ export default class CreateVote extends Component {
                             <FormGroup row='true'>
                                 <Col>
                                     <InputGroup>
-                                        <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openFileBrowser.bind(this)}><i className='cui-file'></i> 파일 등록</Button>
-                                        <input type='file' hidden onChange={this.fileElectorateHandler.bind(this)} ref={this.fileInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
-                                        <input type='text' className='form-control' value={this.state.uploadedFileName} readOnly invalid='false' />
+                                        <Button color='primary' style={{ color: 'white', zIndex: 1 }} onClick={this.openEleFileBrowser.bind(this)}> 파일 등록</Button>
+                                        <input type='file' hidden onChange={this.fileElectorateHandler.bind(this)} ref={this.fileEleInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
+                                        <input type='text' className='form-control' value={this.state.uploadedEleFileName} readOnly invalid='false' />
                                     </InputGroup>
                                 </Col>
                             </FormGroup>
-                            {this.state.dataLoaded &&
+                            {this.state.eleDataLoaded &&
                                 <div style={{ margin: 20 }}>
                                     <Card body outline='true' className='restrict-card'>
-                                        <OutTable data={this.state.rows} columns={this.state.cols} tableClassName='ExcelTable2007' />
+                                        <OutTable data={this.state.eleRows} columns={this.state.eleCols} tableClassName='ExcelTable2007' />
                                     </Card>
                                 </div>}
                             <Button variant='primary' type='submit' size='lg'
                                 style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}>
-                                다음
+                                확인
                             </Button>
                         </Form>
                     </div>
+                    <Button onClick={this.handleSearch} className="button">
+                        다음 누르면 넘어가야 되는데 일단 이거로 선거 목록으로 돌아가기
+                    </Button>
                 </div>
             </div >
         )

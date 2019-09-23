@@ -4,11 +4,19 @@ class Electorate {
     // 선거권자 추가
     create(electorates) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'INSERT INTO electorate SET ?';
+            let stmt = "";
+            let electorate;
+            for(var i = 0; i < electorates.length; i++) {
+                electorate = electorates[i];
+                stmt += '(' + electorate.vote_id + ', "' + electorate.name + '", "' + electorate.name_ex + '", "' + electorate.phone + '")';
+                if(i < electorates.length - 1) stmt += ', ';
+            }
+            let sql = 'INSERT INTO electorate (vote_id, name, name_ex, phone) VALUES ' + stmt;
             try {
-                let result = await db.query(sql, electorates);
+                let result = await db.query(sql);
                 resolve(result);
             } catch(err) {
+                console.log(err);
                 reject(err);
             }
         });
