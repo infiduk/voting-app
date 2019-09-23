@@ -18,10 +18,9 @@ export default class FinList extends Component {
     }
 
     callApi = async () => {
-        const response = await fetch('/vote');
+        const response = await fetch('/vote/0');
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
-
         return body;
     };
 
@@ -34,7 +33,8 @@ export default class FinList extends Component {
                     <div style={{ marginLeft: 10, marginRight: 10 }}>
                         <ListGroup variant='flush'>
                             <hr />
-                            <ListGroup.Item action href='/voteResult'>
+                            {this.state.voteList.map(voteList => {
+                                return <ListGroup.Item action href={'/vote/' + `${voteList.id}`} key={`vostList-${voteList.id}`}>
                                 <div className='row'>
                                     <img
                                         alt=''
@@ -43,36 +43,11 @@ export default class FinList extends Component {
                                         height='30'
                                         style={{ marginRight: 10 }}
                                     />
-                                    <h4>제 2회 교회 총 선거선거선거선</h4>
+                                    <h4>{voteList.title}</h4>
                                 </div>
-                                <h5 style={{ textAlign: 'right' }}>2019.09.16 ~ 2019.09.30</h5>
+                                <h5 style={{ textAlign: 'right' }}>{voteList.begin_date} ~ {voteList.end_date}</h5>
                             </ListGroup.Item>
-                            <ListGroup.Item action href='#link2'>
-                                <div className='row'>
-                                    <img
-                                        alt=''
-                                        src={require('./images/jeongeui_logo_icon.png')}
-                                        width='30'
-                                        height='30'
-                                        style={{ marginRight: 10 }}
-                                    />
-                                    <h4>제 2회 교회 총 선거선거선거선</h4>
-                                </div>
-                                <h5 style={{ textAlign: 'right' }}>2019.09.16 ~ 2019.09.30</h5>
-                            </ListGroup.Item>
-                            <ListGroup.Item action href='#link3'>
-                                <div className='row'>
-                                    <img
-                                        alt=''
-                                        src={require('./images/jeongeui_logo_icon.png')}
-                                        width='30'
-                                        height='30'
-                                        style={{ marginRight: 10 }}
-                                    />
-                                    <h4>제 2회 교회 총 선거선거선거선</h4>
-                                </div>
-                                <h5 style={{ textAlign: 'right' }}>2019.09.16 ~ 2019.09.30</h5>
-                            </ListGroup.Item>
+                            })}
                             <hr />
                         </ListGroup>
                     </div>

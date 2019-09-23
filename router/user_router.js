@@ -8,21 +8,21 @@ const candidateModel = require('../model/candidate_model');
 const request = require('request-promise-native');
 const process = require('process');
 
-// 진행 중인 선거 목록 조회
-userRouter.get('/vote', async (req, res) => {
+// 선거 목록 조회
+userRouter.get('/vote/:status', async (req, res) => {
     let data;
     try {
-        let result = await voteModel.selectAll();
+        let result = await voteModel.selectAll(req.params.status);
         data = {
             result: true,
-            msg: '진행 중인 선거 목록 조회 성공',
+            msg: '선거 목록 조회 성공',
             data: result[0]
         }
         res.status(200).send(data);
     } catch(err) {
         data = {
             result: false,
-            msg: `진행 중인 선거 목록 조회 실패: ${err}`
+            msg: `선거 목록 조회 실패: ${err}`
         }
         res.status(500).send(data);
     }
@@ -134,26 +134,6 @@ userRouter.post('/vote', async (req, res) => {
         res.status(200).send(data);
     } catch(err) {
         data = { status: false, msg: '투표 실패' };
-        res.status(500).send(data);
-    }
-});
-
-// 진행 중인 선거 목록 조회
-userRouter.get('/vote', async (req, res) => {
-    let data;
-    try {
-        let result = await voteModel.selectAll();
-        data = {
-            result: true,
-            msg: '진행 중인 선거 목록 조회 성공',
-            data: result[0]
-        }
-        res.status(200).send(data);
-    } catch(err) {
-        data = {
-            result: false,
-            msg: `진행 중인 선거 목록 조회 실패: ${err}`
-        }
         res.status(500).send(data);
     }
 });

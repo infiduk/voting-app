@@ -18,10 +18,9 @@ export default class IngList extends Component {
     }
 
     callApi = async () => {
-        const response = await fetch('/vote');
+        const response = await fetch('/vote/1');
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
-
         return body;
     };
 
@@ -35,7 +34,7 @@ export default class IngList extends Component {
                         <ListGroup variant='flush'>
                             <hr />
                             {this.state.voteList.map(voteList => {
-                                return <ListGroup.Item action href='/auth' key={`vostList-${voteList.id}`}>
+                                return <ListGroup.Item action href={'/vote/' + `${voteList.id}`} key={`vostList-${voteList.id}`}>
                                 <div className='row'>
                                     <img
                                         alt=''

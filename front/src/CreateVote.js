@@ -109,8 +109,6 @@ export default class CreateVote extends Component {
     }
 
     renderCandidateFile = (fileObj) => {
-        console.log('1');
-        //just pass the fileObj as parameter
         ExcelRenderer(fileObj, (err, resp) => {
             if (err) {
                 console.log(err);
@@ -127,8 +125,6 @@ export default class CreateVote extends Component {
     }
 
     renderElectorateFile = (fileObj) => {
-        console.log('2');
-        //just pass the fileObj as parameter
         ExcelRenderer(fileObj, (err, resp) => {
             if (err) {
                 console.log(err);
