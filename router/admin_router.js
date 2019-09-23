@@ -4,7 +4,8 @@ const FileStore = require('session-file-store')(session);
 const adminRouter = express.Router();
 const voteModel = require('../model/vote_model');
 const candidateModel = require('../model/candidate_model');
-const electorateModel = require('../model/electorate_model');
+const electorateModel = require('../model/electorate_model')
+const adminModel = require('../model/admin_model');
 
 adminRouter.use(session({
     secret: 'keyboard cat',
@@ -16,7 +17,6 @@ adminRouter.use(session({
 // 새로운 선거 등록
 adminRouter.post('/admin/vote', async (req, res) => {
     let data;
-    console.log(req.body);
     const vote = {
         title: req.body.title, 
         begin_date: req.body.begin_date, 

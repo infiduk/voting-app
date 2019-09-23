@@ -16,7 +16,7 @@
     "webpack": "^4.39.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "export PORT=3001 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -36,5 +36,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://ch-4ml.iptime.org:3000"
 }
