@@ -10,21 +10,17 @@ const process = require('process');
 
 // 진행 중인 선거 목록 조회
 userRouter.get('/vote', async (req, res) => {
-    console.log('1 안에 들어옴1111');
     let data;
     try {
         console.log('2 트라이안에 들어옴');
         let result = await voteModel.selectAll();
-        console.log('3-1 ㅌ르ㅏ이 끝안에 들어옴');
         data = {
             result: true,
             msg: '진행 중인 선거 목록 조회 성공',
             data: result[0][0]
         }
-        console.log('3-2 끝 안에 들어옴');
         res.status(200).send(data);
     } catch(err) {
-        console.log('4 응안돼~안에 들어옴');
         data = {
             result: false,
             msg: `진행 중인 선거 목록 조회 실패: ${err}`
