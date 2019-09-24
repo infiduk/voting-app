@@ -58,14 +58,12 @@ userRouter.post('/electorate', async (req, res) => {
     const electorate = {
         vote_id: req.body.vote_id,
         name: req.body.name,
-        name_ex: req.body.name_ex,  
+        name_ex: req.body.name_ex,
     };
-    console.log(electorate);
     const auth = req.body.auth;
     try {
         let result = await electorateModel.select(electorate);
         if(result[0].length > 0) {
-            console.log(result[0]);
             if(result[0][0].auth != auth) { // 인증번호가 일치하지 않는 경우
                 // 인증번호 불일치
                 console.log('인증번호 불일치');

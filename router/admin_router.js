@@ -93,7 +93,7 @@ adminRouter.post('/admin/auth', async (req, res) => {
     let data;
     if(req.session.admin) {
         let electorate = {
-            vote_id: req.body.voteId,
+            vote_id: req.body.vote_id,
             name: req.body.name,
             name_ex: req.body.name_ex
         };
@@ -175,7 +175,13 @@ adminRouter.get('/logout', async (req, res) => {
 
 // 세션 확인
 adminRouter.get('/session', async (req, res) => {
-   res.send({ session: req.session.admin });
+    if(req.session.admin) {
+        console.log('관리자네?');
+        res.send({ session: req.session.admin });
+    } else {
+        console.log('일반 시민이네?');
+        res.send({ session: null });
+    }
 });
 
 module.exports = adminRouter;

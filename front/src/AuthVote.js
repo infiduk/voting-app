@@ -15,6 +15,27 @@ export default class AuthVote extends Component {
         this.setState({ voteId: this.props.match.params.voteId })
     }
 
+    handleSessionSubmit = () => {
+        this.callApi()
+          .then(res => {
+              if (res.session != null || res.session != undefined) {
+                console.log(res.session);
+                this.props.history.push('/UserList/' + `${this.state.voteId}`);
+            } else {
+                console.log(res.session);
+            }
+          })
+          .catch(err => console.log(err));
+    }
+
+    
+      callApi = async () => {
+        const response = await fetch('/session');
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+      }
+
     render() {
         return (
             <div>
@@ -41,8 +62,8 @@ export default class AuthVote extends Component {
                     <Button
                             variant='outline-secondary'
                             size='lg'
-                            href={'/UserList/' + `${this.state.voteId}`}
-                            style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem' }}>
+                            onClick={this.handleSessionSubmit}
+                            style={{ width: '83vw', height: '15vw', fontWeight: '900', fontSize: '1.8rem', marginTop: 20 }}>
                             회원 목록 보기
                         </Button>
                 </div>
