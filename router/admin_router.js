@@ -124,7 +124,7 @@ adminRouter.post('/admin', async (req, res) => {
     };
     try {
         await adminModel.create(admin);
-        data = { status: true, msg: `${name}${name_ex} 관리자 계정 생성 성공` };
+        data = { status: true, msg: `${admin} 관리자 계정 생성 성공` };
         res.status(200).send(data);
     } catch(err) {
         data = { status: false, msg: '관리자 계정 생성 실패' };
@@ -145,7 +145,7 @@ adminRouter.post('/login', async (req, res) => {
             ...admin,
             name: result[0][0].name + result[0][0].name_ex
         };
-        data = { status: true, msg: '로그인 성공' };
+        data = { status: true, msg: '로그인 성공', data: req.session };
         res.status(200).send(data);
     } catch(err) {
         data = { status: false, msg: '로그인 실패' }

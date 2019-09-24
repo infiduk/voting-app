@@ -15,11 +15,12 @@ class Admin {
 
     select(admin) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT * FROM admin WHERE UID = ? AND PASSWORD = ?';
+            let sql = "SELECT * FROM admin WHERE UID = '" + admin.uid + "' AND PASSWORD = '" + admin.password + "'";
             try {
                 let result = await db.query(sql, admin);
                 resolve(result);
             } catch (err) {
+                console.log(err);
                 reject(err);
             }
         });

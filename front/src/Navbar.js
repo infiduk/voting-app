@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 
 export default class NavbarClass extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedIn: false
+    }
+  }
+
+  componentDidMount(){
+    if(sessionStorage.getItem('uid') != null && sessionStorage.getItem('name') != null){
+        this.setState({loggedIn: true}); 
+    } 
+}
+
   render() {
     return (
       <div>
@@ -19,13 +32,10 @@ export default class NavbarClass extends Component {
               <Nav.Link href='/'>진행중인 선거 목록</Nav.Link>
               <Nav.Link href='/finList'>완료된 선거 목록</Nav.Link>
             </Nav>
-            <Nav>
-              {/* 일단 선거 만들기 확인 */}
-              <Nav.Link href='/createVote'>선거 만들기</Nav.Link>
-              <Nav.Link href='/authAdmin'>관리자</Nav.Link>
-              {/* 세션 있으면 */}
-              <Nav.Link href='#logout'>로그아웃</Nav.Link>
-            </Nav>
+              {this.state.loggedIn == true ? <Nav><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='#logout'>로그아웃</Nav.Link></Nav>
+                : <Nav><Nav.Link href='/authAdmin'>관리자</Nav.Link>
+                <Nav.Link href='/adminSignup'>회원가입</Nav.Link></Nav>
+              }
           </Navbar.Collapse>
         </Navbar>
       </div>

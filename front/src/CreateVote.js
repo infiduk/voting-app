@@ -69,7 +69,7 @@ export default class CreateVote extends Component {
         });
 
         this.setState({ vote_id: response.data });
-        console.log(response.data);
+        console.log(response.json());
     };
 
     // 새로운 후보자 등록 api fetch
