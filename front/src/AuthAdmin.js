@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { Redirect } from 'react-router';
 
 import Navbar from './Navbar';
 
@@ -9,7 +10,6 @@ export default class AuthAdmin extends Component {
         this.state = {
             uid: '',
             password: '',
-            session: '',
         };
     }
 
@@ -22,19 +22,26 @@ export default class AuthAdmin extends Component {
             'password': this.state.password
         };
         try {
-            const response = await fetch('/login', {
+            const response = fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(adminInfo),
             })
-            console.log(response.json());
-            // this.setState({ session: response.json().data.admin });
-            console.log(this.state.session);
-        } catch(err) {
+            response.then(result => result.json())
+                .then(json => {
+                    console.log(json.data.admin);
+                })
+                .catch(err => {
+                    console.log(err);
+                }
+            );
+        } catch (err) {
             console.log(err);
         }
+
+        this.props.history.push('/');
     };
 
     handleChange = (e) => {
@@ -47,18 +54,18 @@ export default class AuthAdmin extends Component {
                 <Navbar />
                 <div style={{ marginTop: 25, padding: 25, flex: 1 }}>
                     <div style={{
-                            display: 'inline-block',
-                            marginTop: 20,
-                            marginBotom: 20,
-                            width: '60vw',
-                            height: '80%',
-                            backgroundColor: '#f1f1f1',
-                            justifyContent: 'center',
-                            alignSelf: 'center',
-                            alignItems: 'center'
-                        }}>
-                        <h3 style={{marginTop: 30, textAlign: 'center'}}>관리자 로그인</h3>
-                        <Form style={{padding: 25, marginTop: 10}} onSubmit={this.handleSubmit}>
+                        display: 'inline-block',
+                        marginTop: 20,
+                        marginBotom: 20,
+                        width: '60vw',
+                        height: '80%',
+                        backgroundColor: '#f1f1f1',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <h3 style={{ marginTop: 30, textAlign: 'center' }}>관리자 로그인</h3>
+                        <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleSubmit}>
                             <Form.Group controlId='adminId'>
                                 <Form.Label>관리자 ID</Form.Label>
                                 <Form.Control type='id' size='lg' name='uid' placeholder='ID' onChange={this.handleChange} />
@@ -68,7 +75,7 @@ export default class AuthAdmin extends Component {
                                 <Form.Control type='password' size='lg' name='password' placeholder='Password' onChange={this.handleChange} />
                             </Form.Group>
                             <Button variant='primary' type='submit' block
-                                style={{marginTop: 50, padding: 10, alignSelf: 'center'}}>
+                                style={{ marginTop: 50, padding: 10, alignSelf: 'center' }}>
                                 로그인
                             </Button>
                         </Form>

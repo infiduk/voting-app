@@ -52,20 +52,25 @@ userRouter.get('/vote/:voteId', async (req, res) => {
 userRouter.post('/electorate', async (req, res) => {
     let data;
     const electorate = {
-        vote_id: req.body.voteId,
+        vote_id: req.body.vote_id,
         name: req.body.name,
         name_ex: req.body.name_ex,                                                                                                                                                                                                       
     };
+    console.log(electorate);
     const auth = req.body.auth;
     try {
         let result = await electorateModel.select(electorate);
         if(result[0].length > 0) {
+            console.log(result[0]);
             if(result[0][0].auth != auth) { // 인증번호가 일치하지 않는 경우
                 // 인증번호 불일치
+                console.log('인증번호 불일치');
                 data = { status: false, msg: '인증번호 불일치' };
             } else if(result[0][0].vote_time != null) { // 이미 투표한 경우
+                console.log('이미 투표함');
                 data = { status: false, msg: '이미 투표함' };
             } else {
+                console.log('인증 성공');
                 data = { status: true, msg: '인증 성공' }
             }
         } else { // 데이터 없음
@@ -79,45 +84,47 @@ userRouter.post('/electorate', async (req, res) => {
 });
 
 // 휴대폰 번호로 인증번호 조회
-userRouter.post('/auth/:voteId/', async (req, res) => {
+userRouter.post('/auth', async (req, res) => {
     let data;
     const user = {
-        vote_id: req.param.voteId,
+        vote_id: req.body.vote_id,
         name: req.body.name,
         name_ex: req.body.name_ex,
     };
     const phone = req.body.phone;
     try {
         let result = await electorateModel.select(user);
+        console.log(user);
         let a_phone = new Array(); // 폰 번호 배열 
         a_phone.push(phone);
         if(phone == result[0][0].phone) {
             let auth = await electorateModel.updateAuth(result[0][0].id);
             // 생성된 인증번호를 휴대폰으로 전송
-            let config = {
-                uri: `https://api-sens.ncloud.com/v1/sms/services/${process.env.SENS_SERVICEID}/messages`,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'x-ncp-auth-key': process.env.SENS_AUTHKEY,
-                    'x-ncp-service-secret': process.env.SENS_SERVICESECRET,
-                },
-                body: {
-                    'type': 'SMS',
-                    'from': process.env.SENS_SENDNUMBER,
-                    'to': a_phone,
-                    'content': `[높은 뜻 정의교회] ${name}님. ${vote_id}번 선거 인증번호는 ${auth} 입니다.`
-                }
-            };
-            let response = await request(config);
-            console.log("메시지 전송: " + response.status);
-            data = { status: true, msg: '인증번호 전송 성공' };
+            // let config = {
+            //     uri: `https://api-sens.ncloud.com/v1/sms/services/${process.env.SENS_SERVICEID}/messages`,
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json; charset=utf-8',
+            //         'x-ncp-auth-key': process.env.SENS_AUTHKEY,
+            //         'x-ncp-service-secret': process.env.SENS_SERVICESECRET,
+            //     },
+            //     json: {
+            //         'type': 'SMS',
+            //         'from': process.env.SENS_SENDNUMBER,
+            //         'to': a_phone,
+            //         'content': `[높은 뜻 정의교회]${user.name}님. ${user.vote_id}번 선거 인증번호는 [${auth}] 입니다.`
+            //     }
+            // };
+            // let response = await request(config);
+            //console.log("메시지 전송: " + response.status);
+            data = { status: true, msg: '인증번호 전송 성공', auth: auth };
             res.status(200).send(data);
         } else { // 해당 투표 선거권자에 포함되지 않았음
             data = { status: false, msg: '입력 값과 일치하는 정보 없음'} 
             res.status(500).send(data);
         }
     } catch(err) {
+        console.log(err);
         data = { status: false, msg: `인증번호 조회 오류: ${err}` }
         res.status(500).send(data);
     }

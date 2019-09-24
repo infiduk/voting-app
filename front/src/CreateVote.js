@@ -60,16 +60,22 @@ export default class CreateVote extends Component {
             'limit': this.state.limit
         };
 
-        const response = await fetch('/admin/vote', {
+        const response = fetch('/admin/vote', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(voteInfo),
         });
-
-        this.setState({ vote_id: response.data });
-        console.log(response.json());
+        response.then(result => result.json())
+            .then(json => {
+                console.log(json);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        // this.setState({ vote_id: response.data });
+        // console.log(response.json());
     };
 
     // 새로운 후보자 등록 api fetch

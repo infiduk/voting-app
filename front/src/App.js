@@ -29,8 +29,8 @@ export default class App extends Component {
             {/* 완료된 선거 목록 */}
             <Route path='/finList' component={FinList} />
             {/* 인증 */}
-            <Route path='/auth' component={AuthVote} />
-            <Route path='/authPhone' component={AuthVotePhone} />
+            <Route path='/authVote/:voteId' component={AuthVote} />
+            <Route path='/authPhone/:voteId' component={AuthVotePhone} />
             <Route path='/authLive' component={AuthVoteLive} />
             <Route path='/authAdmin' component={AuthAdmin} />
             <Route path='/adminSignup' component={AdminSignup} />
@@ -38,9 +38,9 @@ export default class App extends Component {
             {/* 선거 만들기 */}
             <Route path='/createVote' component={CreateVote} />
             {/* 투표하기 */}
-            <Route path='/voting' component={Voting} />
+            <Route path='/voting/:voteId' component={Voting} />
             {/* 투표 완료 상세정보*/}
-            <Route path='/voteResult' component={VoteResult} />
+            <Route path='/voteResult/:voteId' component={VoteResult} />
           </Switch>
         </div>
       </Router>

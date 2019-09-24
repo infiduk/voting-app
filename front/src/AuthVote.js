@@ -4,6 +4,17 @@ import { Button } from 'react-bootstrap';
 import Navbar from './Navbar';
 
 export default class AuthVote extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            voteId: '',
+        }
+    }
+    
+    componentWillMount() {
+        this.setState({ voteId: this.props.match.params.voteId })
+    }
+
     render() {
         return (
             <div>
@@ -13,7 +24,7 @@ export default class AuthVote extends Component {
                         <Button
                             variant='outline-primary'
                             size='lg'
-                            href='/authPhone'
+                            href={'/authPhone/' + `${this.state.voteId}`}
                             style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem' }}>
                             모바일 인증
                         </Button>
@@ -22,7 +33,7 @@ export default class AuthVote extends Component {
                         <Button
                             variant='outline-secondary'
                             size='lg'
-                            href='/authLive'
+                            href={'/authLive/' + `${this.state.voteId}`}
                             style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem' }}>
                             현장 인증
                         </Button>

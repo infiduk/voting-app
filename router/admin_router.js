@@ -153,7 +153,6 @@ adminRouter.post('/login', async (req, res) => {
     }
 });
 
-
 // 로그아웃
 adminRouter.get('/logout', async (req, res) => {
     let data;
@@ -173,4 +172,10 @@ adminRouter.get('/logout', async (req, res) => {
     }
     res.status(200).send(data);
 });
+
+// 세션 확인
+adminRouter.get('/session', async (req, res) => {
+   res.send({ session: req.session.admin });
+});
+
 module.exports = adminRouter;

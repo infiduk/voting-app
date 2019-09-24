@@ -9,11 +9,10 @@ const corsOptions = {
 
 const app = express();
 
-
 // Template Engine
 app.set('view engine', 'ejs');
 // Template File Location
-app.set('/', __dirname + '/views');
+app.set('/', __dirname + '/front/src');
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
