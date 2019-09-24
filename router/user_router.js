@@ -9,7 +9,7 @@ const request = require('request-promise-native');
 const process = require('process');
 
 // 선거 목록 조회
-userRouter.get('/vote/:status', async (req, res) => {
+userRouter.get('/list/:status', async (req, res) => {
     let data;
     try {
         let result = await voteModel.selectAll(req.params.status);
@@ -32,12 +32,16 @@ userRouter.get('/vote/:status', async (req, res) => {
 userRouter.get('/vote/:voteId', async (req, res) => {
     let data;
     try {
-        let result = await voteModel.select(req.params.voteId);
+        let voteResult = await voteModel.select(req.params.voteId);
+        let candidateResult = await candidateModel.select(req.params.voteId);
         data = {
             result: true,
             msg: '선거 선택 조회 성공',
-            data: result[0][0]
+            voteData: voteResult[0][0],
+            candidateData: candidateResult[0][0],
         }
+        console.log('1');
+        console.log(voteResult);
         res.status(200).send(data);
     } catch(err) {
         data = {
@@ -54,7 +58,7 @@ userRouter.post('/electorate', async (req, res) => {
     const electorate = {
         vote_id: req.body.vote_id,
         name: req.body.name,
-        name_ex: req.body.name_ex,                                                                                                                                                                                                       
+        name_ex: req.body.name_ex,  
     };
     console.log(electorate);
     const auth = req.body.auth;

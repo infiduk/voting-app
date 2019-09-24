@@ -11,7 +11,7 @@ export default class AuthVote extends Component {
         }
     }
     
-    componentWillMount() {
+    componentDidMount() {
         this.setState({ voteId: this.props.match.params.voteId })
     }
 
@@ -38,6 +38,13 @@ export default class AuthVote extends Component {
                             현장 인증
                         </Button>
                     </div>
+                    <Button
+                            variant='outline-secondary'
+                            size='lg'
+                            href={'/UserList/' + `${this.state.voteId}`}
+                            style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem' }}>
+                            회원 목록 보기
+                        </Button>
                 </div>
             </div>
         );

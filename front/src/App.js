@@ -31,10 +31,10 @@ export default class App extends Component {
             {/* 인증 */}
             <Route path='/authVote/:voteId' component={AuthVote} />
             <Route path='/authPhone/:voteId' component={AuthVotePhone} />
-            <Route path='/authLive' component={AuthVoteLive} />
+            <Route path='/authLive/:voteId' component={AuthVoteLive} />
             <Route path='/authAdmin' component={AuthAdmin} />
             <Route path='/adminSignup' component={AdminSignup} />
-            <Route path='/userList' component={UserList} />
+            <Route path='/userList/:voteId' component={UserList} />
             {/* 선거 만들기 */}
             <Route path='/createVote' component={CreateVote} />
             {/* 투표하기 */}

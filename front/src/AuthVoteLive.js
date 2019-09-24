@@ -4,6 +4,17 @@ import { Accordion, Button, Card, FormControl, InputGroup } from 'react-bootstra
 import Navbar from './Navbar';
 
 export default class AuthVoteLive extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            voteId: '',
+        }
+    }
+
+    componentDidMount() {
+        this.setState({ voteId: this.props.match.params.voteId });
+    }
+
     render() {
         return (
             <div>

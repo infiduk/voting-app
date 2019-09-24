@@ -38,10 +38,12 @@ class Candidate {
     // 선거자 목록 조회
     select(voteId) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT name, image FROM candidate WHERE VOTE_NO = ?';
+            let sql = 'SELECT name, name_ex FROM candidate WHERE vote_id = ?';
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);
+                console.log('캔디데이트모델');
+                console.log(result);
             } catch(err) {
                 reject(err);
             }

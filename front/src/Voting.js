@@ -7,7 +7,9 @@ export default class Voting extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            voteID: '',
+            voteId: '',
+            vote: [],
+            candidate: [],
             bgColor: [
                 {
                     position: '',
@@ -63,6 +65,21 @@ export default class Voting extends Component {
     //     }
     //     return '#fff';
     // }
+
+    componentDidMount() {
+        this.setState({ voteId: this.props.match.params.voteID });
+
+        this.callApi()
+            .then(res => {console.log(res.data);})
+            .catch(err => console.log(err));
+    }
+
+    callApi = async () => {
+        const response = await fetch('/vote/3');
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
 
     render() {
         return (

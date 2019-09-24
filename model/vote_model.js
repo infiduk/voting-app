@@ -15,6 +15,19 @@ class Vote {
         });
     }
 
+    // 선거 조회
+    select(voteId) {
+        return new Promise(async (resolve, reject) => {
+            let sql = 'SELECt * FROM vote WHERE id = ?';
+            try {
+                let result = await db.query(sql, voteId);
+                resolve(result);
+            } catch(err) {
+                reject(err);
+            }
+        });
+    }
+
     // 진행 중인 선거 목록 조회
     selectAll(status) {
         return new Promise(async (resolve, reject) => {
