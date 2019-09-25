@@ -84,9 +84,10 @@ export default class AuthVotePhone extends Component {
             console.log(err);
         }
 
-        if(this.state.auth == this.state.getAuth) {
+        if(this.state.auth === this.state.getAuth) {
             console.log('성공이라고고옹오오오오');
-            this.props.history.push('/Voting/' + `${this.state.voteId}`);
+            this.props.history.push('/voting/' + `${this.state.voteId}`);
+            console.log(this.state.voteId);
         } else {
             console.log('인증번호 제대로 치셈');
         }

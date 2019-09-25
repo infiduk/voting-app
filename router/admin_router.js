@@ -18,8 +18,8 @@ adminRouter.use(session({
 adminRouter.post('/admin/vote', async (req, res) => {
     let data;
     const vote = {
-        title: req.body.title, 
-        begin_date: req.body.begin_date, 
+        title: req.body.title,
+        begin_date: req.body.begin_date,
         end_date: req.body.end_date,
         limit: req.body.limit
     };
@@ -27,7 +27,7 @@ adminRouter.post('/admin/vote', async (req, res) => {
         let result = await voteModel.create(vote);
         data = { status: true, msg: '선거 등록 성공', data: result[0]['insertId'] };
         res.status(200).send(data);
-    } catch(err) {
+    } catch (err) {
         data = { status: false, msg: '선거 등록 실패' };
         console.log(data)
         res.status(500).send(data);
@@ -40,7 +40,7 @@ adminRouter.post('/admin/candidate', async (req, res) => {
     let candidatesList = JSON.parse(req.body.candidates);
     console.log(candidatesList);
     let candidates = new Array();
-    for(var i = 1; i < candidatesList.length; i++) {
+    for (var i = 1; i < candidatesList.length; i++) {
         let candidate = {
             vote_id: 1,
             name: candidatesList[i][0],
@@ -54,7 +54,7 @@ adminRouter.post('/admin/candidate', async (req, res) => {
         await candidateModel.create(candidates);
         data = { status: true, msg: '후보자 등록 성공' };
         res.status(200).send(data);
-    } catch(err) {
+    } catch (err) {
         data = { status: false, msg: '후보자 등록 실패' };
         res.status(500).send(data);
     }
@@ -67,7 +67,7 @@ adminRouter.post('/admin/electorate', async (req, res) => {
     console.log(req.body.electorates);
     let electoratesList = JSON.parse(req.body.electorates);
     let electorates = new Array();
-    for(var i = 1; i < electoratesList.length; i++) {
+    for (var i = 1; i < electoratesList.length; i++) {
         let electorate = {
             vote_id: 1,
             name: electoratesList[i][0],
@@ -81,7 +81,7 @@ adminRouter.post('/admin/electorate', async (req, res) => {
         await electorateModel.create(electorates);
         data = { status: true, msg: '후보자 등록 성공' };
         res.status(200).send(data);
-    } catch(err) {
+    } catch (err) {
         data = { status: false, msg: '후보자 등록 실패' };
         res.status(500).send(data);
     }
@@ -91,7 +91,7 @@ adminRouter.post('/admin/electorate', async (req, res) => {
 adminRouter.post('/admin/auth', async (req, res) => {
     // 관리자로 로그인 되었는지 확인
     let data;
-    if(req.session.admin) {
+    if (req.session.admin) {
         let electorate = {
             vote_id: req.body.vote_id,
             name: req.body.name,
@@ -102,7 +102,7 @@ adminRouter.post('/admin/auth', async (req, res) => {
             let auth = await electorateModel.updateAuth(e[0][0].id);
             data = { status: true, msg: '인증번호 생성 성공', data: auth };
             res.status(200).send(data);
-        } catch(err) {
+        } catch (err) {
             data = { status: false, msg: '인증번호 생성 실패' };
             res.status(500).send(data);
         }
@@ -126,7 +126,7 @@ adminRouter.post('/admin', async (req, res) => {
         await adminModel.create(admin);
         data = { status: true, msg: `${admin} 관리자 계정 생성 성공` };
         res.status(200).send(data);
-    } catch(err) {
+    } catch (err) {
         data = { status: false, msg: '관리자 계정 생성 실패' };
         res.status(500).send(data);
     }
@@ -147,7 +147,7 @@ adminRouter.post('/login', async (req, res) => {
         };
         data = { status: true, msg: '로그인 성공', data: req.session };
         res.status(200).send(data);
-    } catch(err) {
+    } catch (err) {
         data = { status: false, msg: '로그인 실패' }
         res.status(500).send(data);
     }
@@ -156,7 +156,7 @@ adminRouter.post('/login', async (req, res) => {
 // 로그아웃
 adminRouter.get('/logout', async (req, res) => {
     let data;
-    if(req.session.admin) {
+    if (req.session.admin) {
         req.session.destroy(
             function (err) {
                 if (err) {
@@ -175,7 +175,7 @@ adminRouter.get('/logout', async (req, res) => {
 
 // 세션 확인
 adminRouter.get('/session', async (req, res) => {
-    if(req.session.admin) {
+    if (req.session.admin) {
         console.log('관리자네?');
         res.send({ session: req.session.admin });
     } else {

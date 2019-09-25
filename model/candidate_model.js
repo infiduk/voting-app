@@ -42,25 +42,24 @@ class Candidate {
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);
-                console.log('캔디데이트모델');
-                console.log(result);
             } catch(err) {
+                console.log(err);
                 reject(err);
             }
         });
     }
 
     // 득표 수 업데이트
-    updateVotes(candidates) {
+    updateVotes(candidates, voteId) {
         let phrase;
         for(let i = 0; i < candidates.length; ++i) {
             phrase = phrase + 'id = ' + candidates[i].id;
             if(i < candidates.length - 1) phrase = phrase + ' or ';
         }
         return new Promise(async (resolve, reject) => {
-            let sql = 'UPDATE candidate SET VOTES = VOTES + 1 WHERE ' + phrase;
+            let sql = 'UPDATE candidate SET VOTES = VOTES + 1 WHERE ? AND VOTE_ID = ?';
             try {
-                let result = await db.query(sql);
+                let result = await db.query(sql, [phrase, voteId]);
                 resolve(result);
             } catch(err) {
                 reject(err);

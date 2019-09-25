@@ -5,9 +5,9 @@ import Navbar from './Navbar';
 
 export default class Voting extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            voteId: '',
+            voteId: this.props.match.params.voteId,
             vote: [],
             candidate: [],
             bgColor: [
@@ -29,34 +29,34 @@ export default class Voting extends Component {
     // }
 
     toggle = (position) => {
-    //     let poState = update(this.state, {
-    //         bgColor: {
-    //             $push: [{"position": position}]
-    //         }
-    //     });
-    //     this.setState(poState);
+        //     let poState = update(this.state, {
+        //         bgColor: {
+        //             $push: [{"position": position}]
+        //         }
+        //     });
+        //     this.setState(poState);
 
-    //     if (this.state.bgColor.position === position) {
-    //         this.setState({
-    //             bgColor: update(
-    //                 this.state.bgColor, {
-    //                     [position]: {
-    //                         active: { $set: position }
-    //                     }
-    //                 }
-    //             )
-    //         });
-    //     } else {
-    //         this.setState({
-    //             bgColor: update(
-    //                 this.state.bgColor, {
-    //                     [position]: {
-    //                         active: { $set: null }
-    //                     }
-    //                 }
-    //             )
-    //         });
-    //     }
+        //     if (this.state.bgColor.position === position) {
+        //         this.setState({
+        //             bgColor: update(
+        //                 this.state.bgColor, {
+        //                     [position]: {
+        //                         active: { $set: position }
+        //                     }
+        //                 }
+        //             )
+        //         });
+        //     } else {
+        //         this.setState({
+        //             bgColor: update(
+        //                 this.state.bgColor, {
+        //                     [position]: {
+        //                         active: { $set: null }
+        //                     }
+        //                 }
+        //             )
+        //         });
+        //     }
     }
 
     // myColor = (position) => {
@@ -66,19 +66,35 @@ export default class Voting extends Component {
     //     return '#fff';
     // }
 
-    componentDidMount() {
-        this.setState({ voteId: this.props.match.params.voteID });
-
-        this.callApi()
-            .then(res => {console.log(res.data);})
-            .catch(err => console.log(err));
+    async componentDidMount() {
+        try {
+            await this.callApi();
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     callApi = async () => {
-        const response = await fetch('/vote/3');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        try {
+            await fetch('/vote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'vote_id': this.state.voteId
+                })
+            })
+                .then(result => result.json())
+                .then(json => {
+                    console.log(json.msg);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     render() {

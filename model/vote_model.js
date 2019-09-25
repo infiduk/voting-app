@@ -44,7 +44,7 @@ class Vote {
     // 선거 진행 기간 지나면 완료로 상태 변경
     update(voteId) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'UPDATE vote SET status = 0 WHERE ID = ?';
+            let sql = 'UPDATE vote SET status = 2 WHERE ID = ?';
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);

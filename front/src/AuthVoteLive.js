@@ -43,7 +43,12 @@ export default class AuthVoteLive extends Component {
             response.then(result => result.json())
                 .then(json => {
                     this.setState({ authStatus: json.status });
-                    console.log(json.status);
+                    if (this.state.authStatus) {
+                        console.log('성공이라고고옹오오오오');
+                        this.props.history.push('/voting/' + `${this.state.voteId}`);
+                    } else {
+                        console.log('인증번호 제대로 치셈');
+                    }
                 })
                 .catch(err => {
                     console.log(err);
@@ -51,13 +56,6 @@ export default class AuthVoteLive extends Component {
                 );
         } catch (err) {
             console.log(err);
-        }
-
-        if (this.state.authStatus == true) {
-            console.log('성공이라고고옹오오오오');
-            this.props.history.push('/Voting/' + `${this.state.voteId}`);
-        } else {
-            console.log('인증번호 제대로 치셈');
         }
     };
 
