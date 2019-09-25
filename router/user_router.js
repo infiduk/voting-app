@@ -66,16 +66,16 @@ userRouter.post('/electorate', async (req, res) => {
             if (result[0][0].auth != auth) { // 인증번호가 일치하지 않는 경우
                 // 인증번호 불일치
                 console.log('인증번호 불일치');
-                data = { status: false, msg: '인증번호 불일치' };
+                data = { status: false, msg: '인증번호 불일치.' };
             } else if (result[0][0].vote_time != null) { // 이미 투표한 경우
                 console.log('이미 투표함');
-                data = { status: false, msg: '이미 투표함' };
+                data = { status: false, msg: '이미 투표함.' };
             } else {
                 console.log('인증 성공');
-                data = { status: true, msg: '인증 성공' }
+                data = { status: true, msg: '인증 성공.' }
             }
         } else { // 데이터 없음
-            data = { status: false, msg: '일치하는 데이터 없음' }
+            data = { status: false, msg: '일치하는 데이터 없음.' }
         }
         res.status(200).send(data);
     } catch (err) {
