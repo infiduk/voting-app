@@ -39,7 +39,7 @@ userRouter.post('/vote', async (req, res) => {
             result: true,
             msg: '선거 선택 조회 성공',
             voteData: voteResult[0][0],
-            candidateData: candidateResult[0][0],
+            candidateData: candidateResult[0],
         }
         res.status(200).send(data);
     } catch (err) {
@@ -132,7 +132,7 @@ userRouter.post('/auth', async (req, res) => {
 });
 
 // 투표
-userRouter.put('/voting', async (req, res) => {
+userRouter.put('/vote', async (req, res) => {
     let data;
     // 회원이 선택한 후보자 목록 받아와서 득표수 올려줌
     const voteId = req.body.voteId;

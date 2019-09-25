@@ -69,7 +69,7 @@ export default class CreateVote extends Component {
         });
         response.then(result => result.json())
             .then(json => {
-                console.log(json);
+                console.log(json.data);
             })
             .catch(err => {
                 console.log(err);

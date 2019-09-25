@@ -10,61 +10,19 @@ export default class Voting extends Component {
             voteId: this.props.match.params.voteId,
             vote: [],
             candidate: [],
-            bgColor: [
+            isClicked: [
                 {
-                    position: '',
-                    active: null,
+                    candidateId: '',
+                    clicked: false
                 }
-            ],
-        }
+            ]
+        };
+        this.handleCheck = this.handleCheck.bind(this);
     }
 
-    // _insertContact(name, phone){
-    //     let newState = update(this.state, {
-    //         contactData: {
-    //             $push: [{"name": name, "phone": phone}]
-    //         }
-    //     });
-    //     this.setState(newState);
-    // }
-
-    toggle = (position) => {
-        //     let poState = update(this.state, {
-        //         bgColor: {
-        //             $push: [{"position": position}]
-        //         }
-        //     });
-        //     this.setState(poState);
-
-        //     if (this.state.bgColor.position === position) {
-        //         this.setState({
-        //             bgColor: update(
-        //                 this.state.bgColor, {
-        //                     [position]: {
-        //                         active: { $set: position }
-        //                     }
-        //                 }
-        //             )
-        //         });
-        //     } else {
-        //         this.setState({
-        //             bgColor: update(
-        //                 this.state.bgColor, {
-        //                     [position]: {
-        //                         active: { $set: null }
-        //                     }
-        //                 }
-        //             )
-        //         });
-        //     }
+    handleCheck(e) {
+        alert(e.currentTarget.dataset.id);
     }
-
-    // myColor = (position) => {
-    //     if (this.state.bgColor.active === position) {
-    //         return '#f0f0f0';
-    //     }
-    //     return '#fff';
-    // }
 
     async componentDidMount() {
         try {
@@ -87,7 +45,32 @@ export default class Voting extends Component {
             })
                 .then(result => result.json())
                 .then(json => {
-                    console.log(json.msg);
+                    this.setState({ vote: json.voteData, candidate: json.candidateData });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    handleVoteSubmit = async e => {
+        e.preventDefault();
+        try {
+            await fetch('/vote', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'votd_id': this.state.vote_id,
+                    'candidates': this.state.candidate
+                })
+            })
+                .then(result => result.json())
+                .then(json => {
+                    this.setState({ vote: json.voteData, candidate: json.candidateData });
                 })
                 .catch(err => {
                     console.log(err);
@@ -102,7 +85,7 @@ export default class Voting extends Component {
             <div>
                 <Navbar />
                 <div style={{ margin: 25 }}>
-                    <h3>선거 제목 불러와서 넣기</h3>
+                    <h3>{this.state.vote.title}</h3>
                     {/* 자동으로 따라다니는 애로 넣기 */}
                     <h4 style={{ margin: 10 }}>투표 인원 : 몇명 / 몇명</h4>
                     <Form inline style={{ marginBottom: 10 }}>
@@ -110,32 +93,26 @@ export default class Voting extends Component {
                         <Button variant='primary'>검색</Button>
                     </Form>
                     <div className='card' style={{ padding: '5px', backgroundColor: '#fafafa' }}>
-                        <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={() => this.toggle(0)}>
-                            <Card.Body>
-                                <Card.Title>김수한</Card.Title>
-                            </Card.Body>
-                        </Card>
-                        <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={() => this.toggle(1)}>
-                            <Card.Body>
-                                <Card.Title>무거북</Card.Title>
-                            </Card.Body>
-                        </Card>
-                        <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={() => this.toggle(2)}>
-                            <Card.Body>
-                                <Card.Title>이와두</Card.Title>
-                            </Card.Body>
-                        </Card>
-                        <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={() => this.toggle(3)}>
-                            <Card.Body>
-                                <Card.Title>루미삼천감ㅂ</Card.Title>
-                            </Card.Body>
-                        </Card>
+                        {this.state.candidate.map(candidate => {
+                            return <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={this.handleCheck} key={candidate.id} data-id={candidate.id}>  
+                                <Card.Body>
+                                    <Form.Check inline id={candidate.id} /><Card.Title>{candidate.name} {candidate.name_ex}
+                                    </Card.Title>
+                                </Card.Body>
+                            </Card>
+                        })}
                     </div>
+                    {/*  return <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={this.handleCheck} key={candidate.id} data-id={candidate.id}>
+                                <Card.Body>
+                                    <Card.Title>{candidate.name} {candidate.name_ex}</Card.Title>
+                                </Card.Body>
+                            </Card> */}
                     <Form>
-                        <Button variant='primary' size='lg' style={{ marginTop: 25 }} block>확인</Button>
+                        <Button variant='primary' size='lg' style={{ marginTop: 25 }} block onClick={this.handleVoteSubmit}>확인</Button>
                     </Form>
                 </div>
             </div>
         )
     }
 }
+

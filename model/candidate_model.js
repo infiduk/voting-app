@@ -38,7 +38,7 @@ class Candidate {
     // 선거자 목록 조회
     select(voteId) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT name, name_ex FROM candidate WHERE vote_id = ?';
+            let sql = 'SELECT id, name, name_ex FROM candidate WHERE vote_id = ?';
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);

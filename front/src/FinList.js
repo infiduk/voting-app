@@ -18,7 +18,7 @@ export default class FinList extends Component {
     }
 
     callApi = async () => {
-        const response = await fetch('/list/0');
+        const response = await fetch('/list/2');
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
         return body;
