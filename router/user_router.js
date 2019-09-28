@@ -51,6 +51,34 @@ userRouter.post('/vote', async (req, res) => {
     }
 });
 
+// 완료된 선거 선택
+userRouter.post('/finvote', async (req, res) => {
+    let data;
+    let totalVote = 0;
+    let voteId = req.body.vote_id;
+    try {
+        let voteResult = await voteModel.select(voteId);
+        let candidateResult = await candidateModel.selectResult(voteId);
+        for(var i = 0; i < candidateResult[0].length; i++) {
+            totalVote += candidateResult[0][i].votes;
+        }
+        data = {
+            result: true,
+            msg: '선거 선택 조회 성공',
+            voteData: voteResult[0][0],
+            candidateData: candidateResult[0],
+            totalVote: totalVote,
+        }
+        res.status(200).send(data);
+    } catch (err) {
+        data = {
+            result: false,
+            msg: `선거 선택 조회 실패: ${err}`,
+        }
+        res.status(500).send(data);
+    }
+});
+
 // 선거권자 인증
 userRouter.post('/electorate', async (req, res) => {
     let data;
@@ -135,16 +163,17 @@ userRouter.post('/auth', async (req, res) => {
 userRouter.put('/vote', async (req, res) => {
     let data;
     // 회원이 선택한 후보자 목록 받아와서 득표수 올려줌
-    const voteId = req.body.voteId;
+    const voteId = req.body.vote_id;
     const candidates = req.body.candidates;
-    console.log(voteId);
     try {
         let result = await voteModel.select(voteId);
         let end_date = result[0][0].end_date;
-        if (moment(end_date).isSameOrBefore(monent(), 'second')) {
+        if (moment(end_date).isSameOrBefore(moment(), 'second')) {
+            console.log('시간오류');
             data = { status: false, msg: '투표 종료 시간 경과' };
             res.status(500).send(data);
         } else {
+            console.log('퉆가능');
             await candidateModel.updateVotes(candidates, voteId);
             data = { status: true, msg: '투표 성공' };
             res.status(200).send(data);
@@ -152,6 +181,7 @@ userRouter.put('/vote', async (req, res) => {
     } catch (err) {
         data = { status: false, msg: '투표 실패' };
         res.status(500).send(data);
+        console.log(err);
     }
 });
 

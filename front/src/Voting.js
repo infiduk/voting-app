@@ -70,13 +70,13 @@ export default class Voting extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    'vote_id': this.state.canArray,
-                    'candidates': this.state.candidate
+                    'vote_id': this.state.voteId,
+                    'candidates': this.state.canArray
                 })
             })
             .then(result => result.json())
             .then(json => {
-                console.log(json.data);
+                console.log(json);
             })
             .catch(err => {
                 console.log(err);
@@ -130,7 +130,7 @@ export default class Voting extends Component {
                         <List
                         items={this.state.canList}
                         multiple={true}
-                        onChange={(selected: number) => { this.handleChecked(selected)}}
+                        onChange={(selected: number) => {this.handleChecked(selected)}}
                     />
                     </div>
                     <Form>

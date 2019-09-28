@@ -4,28 +4,80 @@ import { Button, Form, ProgressBar } from 'react-bootstrap';
 import Navbar from './Navbar';
 
 export default class VoteResult extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            voteId: this.props.match.params.voteId,
+            vote: [],
+            candidate: [],
+            canVote: 0,
+            totalVote: 0,
+        }
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+        try {
+            this.callApi();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    callApi = () => {
+        try {
+            fetch('/finvote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'vote_id': this.state.voteId
+                })
+            })
+            .then(result => result.json())
+            .then(json => {
+                this.setState({ vote: json.voteData, candidate: json.candidateData, totalVote: json.totalVote });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    handleGoBack = () => {
+        window.location.assign('/finList');
+    }
+
     render() {
+        let resultPg = this.state.candidate.map((c) => {
+            let votes = c.votes;
+            let result = ((votes/this.state.totalVote) * 100).toFixed(1);
+            return(
+                <>
+                <h5 style={{ marginTop: 10 }}>{c.name}</h5>
+                <ProgressBar striped variant="info" now={result} label={`${result}%`}/>
+                </>
+            );
+        });
+
         return (
             <div>
                 <Navbar />
                 <div style={{ margin: 25 }}>
-                    <h3 style={{ marginBottom: 15 }}>선거 제목 불러와서 넣기</h3>
+                    <h3 style={{ marginBottom: 15 }}>{this.state.vote.title}</h3>
                     <div style={{ padding: '5px', backgroundColor: '#fafafa' }}>
                         <div style={{ padding: '10px' }}>
-                            <h5>누구누구</h5>
-                            <ProgressBar striped variant="info" now={80} label={`${80}%`}/>
-                            <h5 style={{ marginTop: 10 }}>누구누구누구</h5>
-                            <ProgressBar striped variant="info" now={60} label={`${60}%`}/>
-                            <h5 style={{ marginTop: 10 }}>누구누김수한무</h5>
-                            <ProgressBar striped variant="info" now={55} label={`${55}%`}/>
-                            <h6 style={{ marginTop: 10 }}>거북이와두루미</h6>
-                            <ProgressBar striped variant="warning" now={20} label={`${20}%`}/>
-                            <h6 style={{ marginTop: 10 }}>아쉬워요</h6>
-                            <ProgressBar striped variant="warning" now={9} label={`${9}%`}/>
+                            {resultPg}
+                            {/* <ProgressBar striped variant="info" now={55} label={`${55}%`}/> */}
+                            {/* <ProgressBar striped variant="warning" now={20} label={`${20}%`}/> */}
+                            {/* <ProgressBar striped variant="warning" now={9} label={`${9}%`}/> */}
                         </div>
                     </div>
                     <Form>
-                        <Button variant='primary' size='lg' style={{ marginTop: 25 }} block>뒤로가기</Button>
+                        <Button variant='primary' size='lg' style={{ marginTop: 25 }} onClick={this.handleGoBack} block>뒤로가기</Button>
                     </Form>
                 </div>
             </div>

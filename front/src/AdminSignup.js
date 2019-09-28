@@ -35,7 +35,7 @@ export default class AdminSignup extends Component {
             body: JSON.stringify(adminInfo),
         });
         
-        this.props.history.push('/');
+        window.location.assign('/');
     };
 
     handleChange = (e) => {
