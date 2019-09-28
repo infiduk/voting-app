@@ -1,5 +1,5 @@
-import React, { Component, useState } from 'react';
-import { Accordion, Button, Card, Form, FormControl, InputGroup, Modal } from 'react-bootstrap';
+import React, { Component } from 'react';
+import { Accordion, Button, Card, Form, FormControl, InputGroup } from 'react-bootstrap';
 
 import Navbar from './Navbar';
 
@@ -86,7 +86,7 @@ export default class AuthVotePhone extends Component {
 
         if(this.state.auth === this.state.getAuth) {
             console.log('성공이라고고옹오오오오');
-            this.props.history.push('/voting/' + `${this.state.voteId}`);
+            window.location.assign('/voting/' + `${this.state.voteId}`);
             console.log(this.state.voteId);
         } else {
             console.log('인증번호 제대로 치셈');

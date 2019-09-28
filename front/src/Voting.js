@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import List from 'react-list-select';
 import update from 'react-addons-update';
-import values from 'lodash/values'
 
 import Navbar from './Navbar';
 
@@ -14,7 +13,6 @@ export default class Voting extends Component {
             vote: [],
             candidate: [],
             ingLimit: 0,
-
             canList: [],
             canArray: [],
             status: false,

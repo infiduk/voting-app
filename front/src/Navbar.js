@@ -12,8 +12,10 @@ export default class NavbarClass extends Component {
   componentDidMount() {
     this.callApi()
       .then(res => {
-          if (res.session != null || res.session != undefined) {
-            this.setState({ loggedIn: true });
+        if (res.session === null || res.session === undefined) {
+            this.setState({ loggedIn: false });
+        } else {
+          this.setState({ loggedIn: true });
         }
       })
       .catch(err => console.log(err));
@@ -51,7 +53,7 @@ export default class NavbarClass extends Component {
               <Nav.Link href='/'>진행중인 선거 목록</Nav.Link>
               <Nav.Link href='/finList'>완료된 선거 목록</Nav.Link>
             </Nav>
-            {this.state.loggedIn == true ? <Nav><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link></Nav>
+            {this.state.loggedIn === true ? <Nav><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link></Nav>
               : <Nav><Nav.Link href='/authAdmin'>관리자</Nav.Link>
                 <Nav.Link href='/adminSignup'>회원가입</Nav.Link></Nav>
             }

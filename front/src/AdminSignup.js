@@ -27,7 +27,7 @@ export default class AdminSignup extends Component {
             'phone': this.state.phone
         };
 
-        const response = await fetch('/admin', {
+        await fetch('/admin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

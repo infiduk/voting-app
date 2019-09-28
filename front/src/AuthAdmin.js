@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Redirect } from 'react-router';
 
 import Navbar from './Navbar';
 
@@ -41,7 +40,7 @@ export default class AuthAdmin extends Component {
             console.log(err);
         }
 
-        this.props.history.push('/');
+        window.location.assign('/');
     };
 
     handleChange = (e) => {

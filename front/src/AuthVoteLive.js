@@ -45,7 +45,7 @@ export default class AuthVoteLive extends Component {
                     this.setState({ authStatus: json.status });
                     if (this.state.authStatus) {
                         console.log('성공이라고고옹오오오오');
-                        this.props.history.push('/voting/' + `${this.state.voteId}`);
+                        window.location.assign('/voting/' + `${this.state.voteId}`);
                     } else {
                         console.log('인증번호 제대로 치셈');
                     }

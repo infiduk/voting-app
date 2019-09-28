@@ -18,11 +18,11 @@ export default class AuthVote extends Component {
     handleSessionSubmit = () => {
         this.callApi()
           .then(res => {
-              if (res.session != null || res.session != undefined) {
+              if (res.session === null || res.session === undefined) {
                 console.log(res.session);
-                this.props.history.push('/UserList/' + `${this.state.voteId}`);
             } else {
                 console.log(res.session);
+                window.location.assign('/UserList/' + `${this.state.voteId}`);
             }
           })
           .catch(err => console.log(err));

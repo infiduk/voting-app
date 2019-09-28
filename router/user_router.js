@@ -137,6 +137,7 @@ userRouter.put('/vote', async (req, res) => {
     // 회원이 선택한 후보자 목록 받아와서 득표수 올려줌
     const voteId = req.body.voteId;
     const candidates = req.body.candidates;
+    console.log(voteId);
     try {
         let result = await voteModel.select(voteId);
         let end_date = result[0][0].end_date;
