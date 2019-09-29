@@ -14,7 +14,9 @@ export default class Voting extends Component {
             candidate: [],
             ingLimit: 0,
             canList: [],
+            canIdArray: [],
             canArray: [],
+            canNewArray: [],
             status: false,
         };
         this.handleChecked = this.handleChecked.bind(this);
@@ -49,7 +51,8 @@ export default class Voting extends Component {
                 this.setState({ vote: json.voteData, candidate: json.candidateData });
                 this.state.candidate.map((c) => {
                     this.setState({
-                        canList: update(this.state.canList, { $push: [c.name + c.name_ex] })
+                        canList: update(this.state.canList, { $push: [c.name + c.name_ex] }),
+                        canIdArray: update(this.state.canIdArray, { $push: [c.id] })
                     })
                 });
             })
@@ -62,6 +65,17 @@ export default class Voting extends Component {
     };
 
     handleVoteSubmit = async e => {
+        this.state.canArray.map((c, index) => {
+            console.log('c: ' + c + ', index: ' + index);
+            if(c !== null) {
+                let ca = this.state.canIdArray[c];
+                console.log('ca: ' + ca);
+                this.state.canNewArray.push(ca);              
+            };
+            console.log(this.state.canArray);
+            console.log(this.state.canNewArray);
+        });
+
         e.preventDefault();
         try {
             await fetch('/vote', {
@@ -71,7 +85,7 @@ export default class Voting extends Component {
                 },
                 body: JSON.stringify({
                     'vote_id': this.state.voteId,
-                    'candidates': this.state.canArray
+                    'candidates': this.state.canNewArray
                 })
             })
             .then(result => result.json())
@@ -84,6 +98,10 @@ export default class Voting extends Component {
         } catch (err) {
             console.log(err);
         }
+
+        this.setState({
+            canNewArray: update(this.state.canNewArray, { $splice: [[0, this.state.canNewArray.length]] })
+        })
     };
 
     handleChecked = async (selected) => {
