@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { ListGroup } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -15,6 +17,31 @@ export default class FinList extends Component {
         this.callApi()
             .then(res => this.setState({ voteList: res.data }))
             .catch(err => console.log(err));
+        this.sessionApi()
+            .then(res => {
+                if (res.session === null || res.session === undefined) {
+                    console.log(res.session);
+                    confirmAlert({
+                        customUI: ({ onClose }) => {
+                        return (
+                            <div className='custom-confirm-ui'>
+                            <div className='text-center'>
+                                <p style={{ marginBottom: 20 }}>관리자만 접근 가능합니다.
+                                </p>
+                            </div>
+                            <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                onClose();
+                                window.location.assign('/');
+                            }}> 확인 </button>
+                            </div>
+                        )},
+                        closeOnClickOutside: false
+                    })
+                } else {
+                    console.log(res.session);
+                }
+            })
+            .catch(err => console.log(err));
     }
 
     callApi = async () => {
@@ -23,6 +50,13 @@ export default class FinList extends Component {
         if (response.status !== 200) throw Error(body.message);
         return body;
     };
+
+    sessionApi = async () => {
+        const response = await fetch('/session');
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    }
 
     render() {
         return (

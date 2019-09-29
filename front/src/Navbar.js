@@ -53,9 +53,8 @@ export default class NavbarClass extends Component {
               <Nav.Link href='/'>진행중인 선거 목록</Nav.Link>
               
             </Nav>
-            {this.state.loggedIn === true ? <Nav><Nav.Link href='/finList'>완료된 선거 목록</Nav.Link><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link></Nav>
-              : <Nav><Nav.Link href='/authAdmin'>관리자</Nav.Link>
-                <Nav.Link href='/adminSignup'>회원가입</Nav.Link></Nav>
+            {this.state.loggedIn === true ? <Nav><Nav.Link href='/finList'>완료된 선거 목록</Nav.Link><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link><Nav.Link href='/adminSignup'>관리자 추가</Nav.Link></Nav>
+              : <Nav><Nav.Link href='/authAdmin'>관리자</Nav.Link></Nav>
             }
           </Navbar.Collapse>
         </Navbar>

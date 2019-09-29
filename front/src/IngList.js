@@ -6,8 +6,8 @@ import Navbar from './Navbar';
 export default class IngList extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            voteList: [],
+        this.state = { 
+            voteList: [], // 선거 목록 저장
         }
     }
 
@@ -17,6 +17,7 @@ export default class IngList extends Component {
             .catch(err => console.log(err));
     }
 
+    // status가 1(진행 중)인 선거 목록 가져오기
     callApi = async () => {
         const response = await fetch('/list/1');
         const body = await response.json();
