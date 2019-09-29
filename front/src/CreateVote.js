@@ -242,17 +242,16 @@ export default class CreateVote extends Component {
         return (
             <div>
                 <Navbar />
-                <div style={{ marginTop: 25, padding: 15, flex: 1 }}>
+                <div style={{ marginTop: 25, padding: 15 }}>
                     <div style={{
-                        display: 'inline-block',
+                        display: 'initial',
                         marginTop: 20,
                         marginBotom: 20,
                         width: '80vw',
                         height: '80%',
                         backgroundColor: '#fafafa',
                         justifyContent: 'center',
-                        alignSelf: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
                     }}>
                         <h3 style={{ marginTop: 30, marginBottom: 20, textAlign: 'center' }}>선거 만들기</h3>
                         <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleCreateVoteSubmit}>
@@ -273,7 +272,7 @@ export default class CreateVote extends Component {
                                 <Form.Control type='number' name='limit' size='lg' placeholder='투표 선출 인원 수를 입력하세요.' onChange={this.handleChange} />
                             </Form.Group>
                             <Button variant='primary' type='submit' size='lg'
-                                style={{ marginTop: 13, width: '80%', alignSelf: 'center' }}>
+                                style={{ marginTop: 13, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                                 다음
                             </Button>
                         </Form>
@@ -295,7 +294,7 @@ export default class CreateVote extends Component {
                                     </Card>
                                 </div>}
                             <Button variant='primary' type='submit' size='lg'
-                                style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}>
+                                style={{ marginTop: 13, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                                 다음
                             </Button>
                         </Form>
@@ -317,7 +316,7 @@ export default class CreateVote extends Component {
                                     </Card>
                                 </div>}
                             <Button variant='primary' type='submit' size='lg'
-                                style={{ marginTop: 13, marginBottom: 20, width: '80%', alignSelf: 'center' }}>
+                                style={{ marginTop: 13, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                                 확인
                             </Button>
                         </Form>

@@ -72,7 +72,7 @@ export default class AuthVote extends Component {
                             variant='outline-primary'
                             size='lg'
                             href={'/authPhone/' + `${this.state.voteId}`}
-                            style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem' }}>
+                            style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem', alignItems: 'center', justifyContent: 'center', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
                             모바일 인증
                         </Button>
                     </div>
@@ -81,7 +81,7 @@ export default class AuthVote extends Component {
                             variant='outline-secondary'
                             size='lg'
                             href={'/authLive/' + `${this.state.voteId}`}
-                            style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem' }}>
+                            style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem', alignItems: 'center', justifyContent: 'center', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
                             현장 인증
                         </Button>
                     </div>
@@ -90,7 +90,7 @@ export default class AuthVote extends Component {
                             variant='outline-secondary'
                             size='lg'
                             onClick={this.handleSessionSubmit}
-                            style={{ width: '83vw', height: '15vw', fontWeight: '900', fontSize: '1.8rem', marginTop: 20 }}>
+                            style={{ width: '83vw', height: '15vw', fontWeight: '900', fontSize: '1.8rem', marginTop: 20, alignItems: 'center', justifyContent: 'center', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
                             회원 목록 보기
                         </Button> : <div /> }
                 </div>

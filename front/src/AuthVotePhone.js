@@ -99,7 +99,7 @@ export default class AuthVotePhone extends Component {
                 <Navbar />
                 <div style={{ marginTop: 25, padding: 15, flex: 1 }}>
                     <div style={{
-                        display: 'inline-block',
+                        display: 'initial',
                         marginTop: 20,
                         marginBotom: 20,
                         width: '80vw',

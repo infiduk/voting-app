@@ -83,9 +83,9 @@ export default class AdminSignup extends Component {
         return (
             <div>
                 <Navbar />
-                <div style={{ marginTop: 25, padding: 25, flex: 1 }}>
+                <div style={{ marginTop: 25, padding: 25 }}>
                     <div style={{
-                            display: 'inline-block',
+                            display: 'initial',
                             marginTop: 20,
                             marginBotom: 20,
                             width: '60vw',

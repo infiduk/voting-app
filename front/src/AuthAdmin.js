@@ -53,7 +53,7 @@ export default class AuthAdmin extends Component {
                 <Navbar />
                 <div style={{ marginTop: 25, padding: 25, flex: 1 }}>
                     <div style={{
-                        display: 'inline-block',
+                        display: 'initial',
                         marginTop: 20,
                         marginBotom: 20,
                         width: '60vw',
