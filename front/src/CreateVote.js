@@ -97,6 +97,7 @@ export default class CreateVote extends Component {
         response.then(result => result.json())
             .then(json => {
                 console.log(json.data);
+                this.setState({ vote_id: json.data });
             })
             .catch(err => {
                 console.log(err);
@@ -127,7 +128,7 @@ export default class CreateVote extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                'votd_id': this.state.vote_id,
+                'vote_id': this.state.vote_id,
                 'electorates': this.state.electorateList
             })
         });

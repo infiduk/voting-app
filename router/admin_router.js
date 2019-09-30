@@ -38,11 +38,10 @@ adminRouter.post('/admin/vote', async (req, res) => {
 adminRouter.post('/admin/candidate', async (req, res) => {
     let data;
     let candidatesList = JSON.parse(req.body.candidates);
-    console.log(candidatesList);
     let candidates = new Array();
     for (var i = 1; i < candidatesList.length; i++) {
         let candidate = {
-            vote_id: 1,
+            vote_id: req.body.vote_id,
             name: candidatesList[i][0],
             name_ex: candidatesList[i][1],
             phone: candidatesList[i][2]
@@ -63,13 +62,11 @@ adminRouter.post('/admin/candidate', async (req, res) => {
 // 새로운 선거권자 등록
 adminRouter.post('/admin/electorate', async (req, res) => {
     let data;
-    console.log(req.body);
-    console.log(req.body.electorates);
     let electoratesList = JSON.parse(req.body.electorates);
     let electorates = new Array();
     for (var i = 1; i < electoratesList.length; i++) {
         let electorate = {
-            vote_id: 1,
+            vote_id: req.body.vote_id,
             name: electoratesList[i][0],
             name_ex: electoratesList[i][1],
             phone: electoratesList[i][2]

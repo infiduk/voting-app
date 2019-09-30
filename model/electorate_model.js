@@ -15,6 +15,7 @@ class Electorate {
             try {
                 let result = await db.query(sql);
                 resolve(result);
+                console.log('result :' + result);
             } catch(err) {
                 console.log(err);
                 reject(err);
