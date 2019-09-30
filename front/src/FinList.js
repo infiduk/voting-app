@@ -14,13 +14,9 @@ export default class FinList extends Component {
     }
 
     componentDidMount() {
-        this.callApi()
-            .then(res => this.setState({ voteList: res.data }))
-            .catch(err => console.log(err));
         this.sessionApi()
             .then(res => {
-                if (res.session === null || res.session === undefined) {
-                    console.log(res.session);
+                if (!res.result) {
                     confirmAlert({
                         customUI: ({ onClose }) => {
                         return (
@@ -37,25 +33,24 @@ export default class FinList extends Component {
                         )},
                         closeOnClickOutside: false
                     })
-                } else {
-                    console.log(res.session);
                 }
             })
+            .catch(err => console.log(err));
+        this.callApi()
+            .then(res => this.setState({ voteList: res.data }))
             .catch(err => console.log(err));
     }
 
     callApi = async () => {
         const response = await fetch('/list/2');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.msg);
+        return response.json();
     };
 
     sessionApi = async () => {
         const response = await fetch('/session');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.msg);
+        return response.json();
     }
 
     render() {

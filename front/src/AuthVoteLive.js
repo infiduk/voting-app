@@ -52,8 +52,7 @@ export default class AuthVoteLive extends Component {
                 })
                 .catch(err => {
                     console.log(err);
-                }
-                );
+                });
         } catch (err) {
             console.log(err);
         }

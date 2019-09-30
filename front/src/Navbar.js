@@ -12,7 +12,7 @@ export default class NavbarClass extends Component {
   componentDidMount() {
     this.callApi()
       .then(res => {
-        if (res.session === null || res.session === undefined) {
+        if (!res.result) {
             this.setState({ loggedIn: false });
         } else {
           this.setState({ loggedIn: true });
@@ -23,17 +23,15 @@ export default class NavbarClass extends Component {
 
   callApi = async () => {
     const response = await fetch('/session');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
+    if (response.status !== 200) throw Error(response.msg);
+    return response.json();
   }
 
   logout = async () => {
     const response = await fetch('/logout');
-    const body = await response.json();
     this.setState({ loggedIn: false });
-    if (response.status !== 200) throw Error(body.message);
-    return body;
+    if (response.status !== 200) throw Error(response.msg);
+    return response.json();
   }
 
   render() {

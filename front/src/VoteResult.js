@@ -26,14 +26,14 @@ export default class VoteResult extends Component {
         }
         this.sessionApi()
             .then(res => {
-                if (res.session === null || res.session === undefined) {
-                    console.log(res.session);
+                if (!res.json().result) {
                     confirmAlert({
                         customUI: ({ onClose }) => {
                         return (
                             <div className='custom-confirm-ui'>
                             <div className='text-center'>
-                                <p style={{ marginBottom: 20 }}>관리자만 접근 가능합니다.
+                                <p style={{ marginBottom: 20 }}>
+                                    관리자만 접근 가능합니다.
                                 </p>
                             </div>
                             <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
@@ -53,9 +53,8 @@ export default class VoteResult extends Component {
 
     sessionApi = async () => {
         const response = await fetch('/session');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.json().msg);
+        return response.json();
     }
 
     callApi = () => {
@@ -105,9 +104,6 @@ export default class VoteResult extends Component {
                     <div style={{ padding: '5px', backgroundColor: '#fafafa' }}>
                         <div style={{ padding: '10px' }}>
                             {resultPg}
-                            {/* <ProgressBar striped variant="info" now={55} label={`${55}%`}/> */}
-                            {/* <ProgressBar striped variant="warning" now={20} label={`${20}%`}/> */}
-                            {/* <ProgressBar striped variant="warning" now={9} label={`${9}%`}/> */}
                         </div>
                     </div>
                     <Form>

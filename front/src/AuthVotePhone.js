@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Accordion, Button, Card, Form, FormControl, InputGroup } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -15,6 +17,7 @@ export default class AuthVotePhone extends Component {
 
             authMsg: '',
             getAuth: '',
+            getAuthStatus: false,
         } 
     }
 
@@ -44,13 +47,32 @@ export default class AuthVotePhone extends Component {
             })
             response.then(result => result.json())
                 .then(json => {
-                    console.log(json.auth);
-                    this.setState({ getAuth: json.auth });
+                    console.log(json.status);
+                    this.setState({ getAuth: json.auth, getAuthStatus: json.status });
+
+                    if(!this.state.getAuthStatus) {
+                        console.log(this.state.getAuthStatus);
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                            return (
+                                <div className='custom-confirm-ui'>
+                                <div className='text-center'>
+                                    <p style={{ marginBottom: 20 }}>선거권자 목록에 등록되지 않은 회원입니다.
+                                    </p>
+                                </div>
+                                <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                    window.location.assign('/authPhone/' + `${this.state.voteId}`);
+                                }}> 확인 </button>
+                                </div>
+                            )},
+                            closeOnClickOutside: false
+                        })
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 }
-            );
+            );            
         } catch (err) {
             console.log(err);
         }
@@ -69,7 +91,7 @@ export default class AuthVotePhone extends Component {
                 'vote_id': this.state.voteId,
                 'name': this.state.name,
                 'name_ex': this.state.name_ex,
-                'auth': this.state.auth
+                'phone': this.state.phone
                 })
             })
             response.then(result => result.json())

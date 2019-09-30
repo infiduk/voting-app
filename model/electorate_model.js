@@ -25,7 +25,7 @@ class Electorate {
     // 선거권자 목록에 있는지 조회
     select(electorate) {
         return new Promise(async (resolve, reject) => {
-            let sql = "SELECT * FROM electorate WHERE VOTE_ID = ? AND NAME = ? AND NAME_EX = ?";
+            let sql = 'SELECT * FROM electorate WHERE VOTE_ID = ? AND NAME = ? AND NAME_EX = ?';
             try {
                 let result = await db.query(sql, [electorate.vote_id, electorate.name, electorate.name_ex]);
                 resolve(result);

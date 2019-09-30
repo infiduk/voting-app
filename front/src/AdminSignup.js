@@ -20,14 +20,14 @@ export default class AdminSignup extends Component {
     componentDidMount() {
         this.callApi()
             .then(res => {
-                if (res.session === null || res.session === undefined) {
-                    console.log(res.session);
+                if (!res.result) {
                     confirmAlert({
                         customUI: ({ onClose }) => {
                         return (
                             <div className='custom-confirm-ui'>
                             <div className='text-center'>
-                                <p style={{ marginBottom: 20 }}>관리자만 접근 가능합니다.
+                                <p style={{ marginBottom: 20 }}>
+                                    관리자만 접근 가능합니다.
                                 </p>
                             </div>
                             <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
@@ -38,8 +38,6 @@ export default class AdminSignup extends Component {
                         )},
                         closeOnClickOutside: false
                     })
-                } else {
-                    console.log(res.session);
                 }
             })
             .catch(err => console.log(err));
@@ -47,32 +45,51 @@ export default class AdminSignup extends Component {
 
     callApi = async () => {
         const response = await fetch('/session');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.msg);
+        return response.json();
     }
 
     // 관리자 등록 api fetch
     handleSubmit = async e => {
         e.preventDefault();
 
+        const { uid, password, name, name_ex, phone } = this.state;
+
         let adminInfo = {
-            'uid': this.state.uid,
-            'password': this.state.password,
-            'name': this.state.name,
-            'name_ex': this.state.name_ex,
-            'phone': this.state.phone
+            'uid': uid,
+            'password': password,
+            'name': name,
+            'name_ex': name_ex,
+            'phone': phone
         };
 
-        await fetch('/admin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(adminInfo),
-        });
-        
-        window.location.assign('/');
+        if(uid === null || password === null || name === null || name_ex === null || phone === null) {
+            confirmAlert({
+                customUI: () => {
+                return (
+                    <div className='custom-confirm-ui'>
+                    <div className='text-center'>
+                        <p style={{ marginBottom: 20 }}>모든 항목에 값을 입력해주세요.
+                        </p>
+                    </div>
+                    <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                        window.location.assign('/adminSignup');
+                    }}> 확인 </button>
+                    </div>
+                )},
+                closeOnClickOutside: false
+            })
+        } else {
+            await fetch('/admin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(adminInfo),
+            });
+            
+            window.location.assign('/');
+        }
     };
 
     handleChange = (e) => {

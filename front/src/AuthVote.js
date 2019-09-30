@@ -17,16 +17,14 @@ export default class AuthVote extends Component {
     componentDidMount() {
         this.setState({ voteId: this.props.match.params.voteId })
         this.callApi()
-            .then(res => {
-                if (res.session === null || res.session === undefined) {
-                    console.log(res.session);
-                    this.setState({ isAdmin: false });
-                } else {
-                    console.log(res.session);
-                    this.setState({ isAdmin: true });
-                }
-            })
-            .catch(err => console.log(err));
+        .then(res => {
+            if (!res.result) {
+                this.setState({ loggedIn: false });
+            } else {
+            this.setState({ loggedIn: true });
+            }
+        })
+        .catch(err => console.log(err));
     }
 
     handleSessionSubmit = () => {
@@ -57,9 +55,8 @@ export default class AuthVote extends Component {
 
     callApi = async () => {
         const response = await fetch('/session');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.json().msg);
+        return response.json();
     }
 
     render() {

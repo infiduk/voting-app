@@ -25,10 +25,10 @@ adminRouter.post('/admin/vote', async (req, res) => {
     };
     try {
         let result = await voteModel.create(vote);
-        data = { status: true, msg: '선거 등록 성공', data: result[0]['insertId'] };
+        data = { result: true, msg: '선거 등록 성공', data: result[0]['insertId'] };
         res.status(200).send(data);
     } catch (err) {
-        data = { status: false, msg: '선거 등록 실패' };
+        data = { result: false, msg: '선거 등록 실패' };
         console.log(data)
         res.status(500).send(data);
     }
@@ -52,10 +52,10 @@ adminRouter.post('/admin/candidate', async (req, res) => {
     console.log(candidates);
     try {
         await candidateModel.create(candidates);
-        data = { status: true, msg: '후보자 등록 성공' };
+        data = { result: true, msg: '후보자 등록 성공' };
         res.status(200).send(data);
     } catch (err) {
-        data = { status: false, msg: '후보자 등록 실패' };
+        data = { result: false, msg: '후보자 등록 실패' };
         res.status(500).send(data);
     }
 });
@@ -79,10 +79,10 @@ adminRouter.post('/admin/electorate', async (req, res) => {
     console.log(electorates);
     try {
         await electorateModel.create(electorates);
-        data = { status: true, msg: '후보자 등록 성공' };
+        data = { result: true, msg: '후보자 등록 성공' };
         res.status(200).send(data);
     } catch (err) {
-        data = { status: false, msg: '후보자 등록 실패' };
+        data = { result: false, msg: '후보자 등록 실패' };
         res.status(500).send(data);
     }
 });
@@ -100,14 +100,14 @@ adminRouter.post('/admin/auth', async (req, res) => {
         try {
             let e = await electorateModel.select(electorate);
             let auth = await electorateModel.updateAuth(e[0][0].id);
-            data = { status: true, msg: '인증번호 생성 성공', data: auth };
+            data = { result: true, msg: '인증번호 생성 성공', data: auth };
             res.status(200).send(data);
         } catch (err) {
-            data = { status: false, msg: '인증번호 생성 실패' };
+            data = { result: false, msg: '인증번호 생성 실패' };
             res.status(500).send(data);
         }
     } else {
-        data = { status: false, msg: '관리자 로그인 필요' };
+        data = { result: false, msg: '관리자 로그인 필요' };
         res.status(500).send(data);
     }
 });
@@ -124,10 +124,10 @@ adminRouter.post('/admin', async (req, res) => {
     };
     try {
         await adminModel.create(admin);
-        data = { status: true, msg: `${admin} 관리자 계정 생성 성공` };
+        data = { result: true, msg: `${admin} 관리자 계정 생성 성공` };
         res.status(200).send(data);
     } catch (err) {
-        data = { status: false, msg: '관리자 계정 생성 실패' };
+        data = { result: false, msg: '관리자 계정 생성 실패' };
         res.status(500).send(data);
     }
 });
@@ -145,10 +145,10 @@ adminRouter.post('/login', async (req, res) => {
             ...admin,
             name: result[0][0].name + result[0][0].name_ex
         };
-        data = { status: true, msg: '로그인 성공', data: req.session };
+        data = { result: true, msg: '로그인 성공', data: req.session };
         res.status(200).send(data);
     } catch (err) {
-        data = { status: false, msg: '로그인 실패' }
+        data = { result: false, msg: '로그인 실패' }
         res.status(500).send(data);
     }
 });
@@ -160,15 +160,15 @@ adminRouter.get('/logout', async (req, res) => {
         req.session.destroy(
             function (err) {
                 if (err) {
-                    data = { status: false, msg: `로그아웃 오류: ${err}` }
+                    data = { result: false, msg: `로그아웃 오류: ${err}` }
                     return;
                 }
                 console.log('세션 삭제 성공');
-                data = { status: true, msg: '로그아웃 성공' }
+                data = { result: true, msg: '로그아웃 성공' }
             }
         );
     } else {
-        data = { status: false, msg: '세션 정보 없음' }
+        data = { result: false, msg: '세션 정보 없음' }
     }
     res.status(200).send(data);
 });
@@ -176,11 +176,9 @@ adminRouter.get('/logout', async (req, res) => {
 // 세션 확인
 adminRouter.get('/session', async (req, res) => {
     if (req.session.admin) {
-        console.log('관리자네?');
-        res.send({ session: req.session.admin });
+        res.send({ result: true, data: req.session.admin, msg: "관리자" });
     } else {
-        console.log('일반 시민이네?');
-        res.send({ session: null });
+        res.send({ result: false, data: null, msg: "로그인 안됨" });
     }
 });
 

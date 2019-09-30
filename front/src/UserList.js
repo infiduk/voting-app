@@ -19,8 +19,7 @@ export default class UserList extends Component {
         this.setState({ voteId: this.props.match.params.voteId })
         this.callApi()
             .then(res => {
-                if (res.session === null || res.session === undefined) {
-                    console.log(res.session);
+                if (!res.result) {
                     confirmAlert({
                         customUI: ({ onClose }) => {
                         return (
@@ -38,7 +37,6 @@ export default class UserList extends Component {
                         closeOnClickOutside: false
                     })
                 } else {
-                    console.log(res.session);
                 }
             })
             .catch(err => console.log(err));
@@ -76,9 +74,8 @@ export default class UserList extends Component {
 
     callApi = async () => {
         const response = await fetch('/session');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.json().msg);
+        return response.json();
     }
 
     render() {

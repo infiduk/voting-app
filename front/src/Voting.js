@@ -22,10 +22,6 @@ export default class Voting extends Component {
         this.handleChecked = this.handleChecked.bind(this);
     }
 
-    // handleCheck(e) {
-    //     alert(e.currentTarget.dataset.id);
-    // }
-
     componentDidMount() {
         this._isMounted = true;
         try {
@@ -65,14 +61,11 @@ export default class Voting extends Component {
     };
 
     handleVoteSubmit = async e => {
-        this.state.canArray.map((c, index) => {
-            console.log('c: ' + c + ', index: ' + index);
+        this.state.canArray.map((c) => {
             if(c !== null) {
                 let ca = this.state.canIdArray[c];
-                console.log('ca: ' + ca);
                 this.state.canNewArray.push(ca);              
             };
-            console.log(this.state.canArray);
             console.log(this.state.canNewArray);
         });
 
@@ -98,10 +91,11 @@ export default class Voting extends Component {
         } catch (err) {
             console.log(err);
         }
-
         this.setState({
             canNewArray: update(this.state.canNewArray, { $splice: [[0, this.state.canNewArray.length]] })
         })
+
+        window.location.assign('/');
     };
 
     handleChecked = async (selected) => {

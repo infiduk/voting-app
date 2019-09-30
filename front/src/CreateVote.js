@@ -50,8 +50,7 @@ export default class CreateVote extends Component {
     componentDidMount() {
         this.callApi()
             .then(res => {
-                if (res.session === null || res.session === undefined) {
-                    console.log(res.session);
+                if (!res.result) {
                     confirmAlert({
                         customUI: ({ onClose }) => {
                         return (
@@ -68,8 +67,6 @@ export default class CreateVote extends Component {
                         )},
                         closeOnClickOutside: false
                     })
-                } else {
-                    console.log(res.session);
                 }
             })
             .catch(err => console.log(err));
@@ -104,7 +101,6 @@ export default class CreateVote extends Component {
             .catch(err => {
                 console.log(err);
             });
-        window.location.assign('/');
     };
 
     // 새로운 후보자 등록 api fetch
@@ -135,6 +131,7 @@ export default class CreateVote extends Component {
                 'electorates': this.state.electorateList
             })
         });
+        window.location.assign('/');
     };
 
     handleScrollToStats = () => {
@@ -233,9 +230,8 @@ export default class CreateVote extends Component {
 
     callApi = async () => {
         const response = await fetch('/session');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.msg);
+        return response.json();
     }
 
     render() {

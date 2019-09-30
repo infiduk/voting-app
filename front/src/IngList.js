@@ -20,9 +20,8 @@ export default class IngList extends Component {
     // status가 1(진행 중)인 선거 목록 가져오기
     callApi = async () => {
         const response = await fetch('/list/1');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.json().msg);
+        return response.json();
     };
 
     render() {
