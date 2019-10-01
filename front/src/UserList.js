@@ -9,14 +9,13 @@ export default class UserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            voteId: '',
+            voteId: this.props.match.params.voteId,
             name: '',
             name_ex: '',
         }
     }
 
     componentDidMount() {
-        this.setState({ voteId: this.props.match.params.voteId })
         this.callApi()
             .then(res => {
                 if (!res.result) {

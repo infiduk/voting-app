@@ -27,22 +27,18 @@ export default class CreateVote extends Component {
             canDataLoaded: false,
             eleDataLoaded: false,
             isFormInvalidCan: false,
-            uploadedCanFileName: '',
             isFormInvalidEle: false,
+            uploadedCanFileName: '',
             uploadedEleFileName: '',
             canRows: null,
             canCols: null,
             eleRows: null,
             eleCols: null,
+
+            isVoteSubmit: false,
+            isCandidateSubmit: false,
         }
 
-        this.fileCandidateHandler = this.fileCandidateHandler.bind(this);
-        this.fileElectorateHandler = this.fileElectorateHandler.bind(this);
-        this.toggle = this.toggle.bind(this);
-        this.openCanFileBrowser = this.openCanFileBrowser.bind(this);
-        this.openEleFileBrowser = this.openEleFileBrowser.bind(this);
-        this.renderCandidateFile = this.renderCandidateFile.bind(this);
-        this.renderElectorateFile = this.renderElectorateFile.bind(this);
         this.fileCanInput = React.createRef();
         this.fileEleInput = React.createRef();
     }
@@ -80,11 +76,13 @@ export default class CreateVote extends Component {
     handleCreateVoteSubmit = async e => {
         e.preventDefault();
 
+        const { title, begin_date, end_date, limit } = this.state;
+
         let voteInfo = {
-            'title': this.state.title,
-            'begin_date': this.state.begin_date,
-            'end_date': this.state.end_date,
-            'limit': this.state.limit
+            'title': title,
+            'begin_date': begin_date,
+            'end_date': end_date,
+            'limit': limit
         };
 
         const response = fetch('/admin/vote', {
@@ -96,8 +94,8 @@ export default class CreateVote extends Component {
         });
         response.then(result => result.json())
             .then(json => {
-                console.log(json.data);
-                this.setState({ vote_id: json.data });
+                console.log(json.msg);
+                this.setState({ vote_id: json.data, isVoteSubmit: true });
             })
             .catch(err => {
                 console.log(err);
@@ -107,29 +105,42 @@ export default class CreateVote extends Component {
     // 새로운 후보자 등록 api fetch
     handleCreateVoteCandidateSubmit = async e => {
         e.preventDefault();
+
+        const { vote_id, candidateList } = this.state;
+
         await fetch('/admin/candidate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                'vote_id': this.state.vote_id,
-                'candidates': this.state.candidateList
+                'vote_id': vote_id,
+                'candidates': candidateList
             })
+        }).then(result => result.json())
+        .then(json => {
+            console.log(json.msg);
+            this.setState({ isCandidateSubmit: true });
+        })
+        .catch(err => {
+            console.log(err);
         });
     };
 
     // 새로운 선거권자 등록 api fetch
     handleCreateVoteElectorateSubmit = async e => {
         e.preventDefault();
+
+        const { vote_id, electorateList } = this.state;
+
         await fetch('/admin/electorate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                'vote_id': this.state.vote_id,
-                'electorates': this.state.electorateList
+                'vote_id': vote_id,
+                'electorates': electorateList
             })
         });
         window.location.assign('/');
@@ -215,7 +226,7 @@ export default class CreateVote extends Component {
         }
     }
 
-    toggle() {
+    toggle = () => {
         this.setState({
             isOpen: !this.state.isOpen
         });
@@ -254,21 +265,21 @@ export default class CreateVote extends Component {
                         <Form style={{ padding: 25, marginTop: 10 }} onSubmit={this.handleCreateVoteSubmit}>
                             <Form.Group controlId='title'>
                                 <Form.Label>선거 명</Form.Label>
-                                <Form.Control type='text' name='title' size='lg' placeholder='선거 명을 입력하세요.' onChange={this.handleChange} />
+                                <Form.Control type='text' name='title' size='lg' placeholder='선거 명을 입력하세요.' onChange={this.handleChange} disabled={this.state.isVoteSubmit} />
                             </Form.Group>
                             <Form.Group controlId='begin_date'>
                                 <Form.Label>시작 날짜</Form.Label>
-                                <Form.Control type='date' name='begin_date' size='lg' onChange={this.handleChange} />
+                                <Form.Control type='date' name='begin_date' size='lg' onChange={this.handleChange} disabled={this.state.isVoteSubmit} />
                             </Form.Group>
                             <Form.Group controlId='end_date'>
                                 <Form.Label>종료 날짜</Form.Label>
-                                <Form.Control type='date' name='end_date' size='lg' onChange={this.handleChange} />
+                                <Form.Control type='date' name='end_date' size='lg' onChange={this.handleChange} disabled={this.state.isVoteSubmit} />
                             </Form.Group>
                             <Form.Group controlId='limit'>
                                 <Form.Label>투표 선출 인원</Form.Label>
-                                <Form.Control type='number' name='limit' size='lg' placeholder='투표 선출 인원 수를 입력하세요.' onChange={this.handleChange} />
+                                <Form.Control type='number' name='limit' size='lg' placeholder='투표 선출 인원 수를 입력하세요.' onChange={this.handleChange} disabled={this.state.isVoteSubmit} />
                             </Form.Group>
-                            <Button variant='primary' type='submit' size='lg'
+                            <Button variant='primary' type='submit' size='lg' disabled={this.state.isVoteSubmit}
                                 style={{ marginTop: 13, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                                 다음
                             </Button>
@@ -278,8 +289,8 @@ export default class CreateVote extends Component {
                             <FormGroup row='true'>
                                 <Col>
                                     <InputGroup>
-                                        <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openCanFileBrowser.bind(this)}> 파일 등록</Button>
-                                        <input type='file' hidden onChange={this.fileCandidateHandler.bind(this)} ref={this.fileCanInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
+                                        <Button color='primary' style={{ color: 'white', zIndex: 0 }} onClick={this.openCanFileBrowser} disabled={this.candidateList}> 후보자 파일 등록</Button>
+                                        <input type='file' hidden onChange={this.fileCandidateHandler} ref={this.fileCanInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
                                         <input type='text' className='form-control' value={this.state.uploadedCanFileName} readOnly invalid='false' />
                                     </InputGroup>
                                 </Col>
@@ -290,7 +301,7 @@ export default class CreateVote extends Component {
                                         <OutTable data={this.state.canRows} columns={this.state.canCols} tableClassName='ExcelTable2007' />
                                     </Card>
                                 </div>}
-                            <Button variant='primary' type='submit' size='lg'
+                            <Button variant='primary' type='submit' size='lg' disabled={this.state.isCandidateSubmit}
                                 style={{ marginTop: 13, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                                 다음
                             </Button>
@@ -300,8 +311,8 @@ export default class CreateVote extends Component {
                             <FormGroup row='true'>
                                 <Col>
                                     <InputGroup>
-                                        <Button color='primary' style={{ color: 'white', zIndex: 1 }} onClick={this.openEleFileBrowser.bind(this)}> 파일 등록</Button>
-                                        <input type='file' hidden onChange={this.fileElectorateHandler.bind(this)} ref={this.fileEleInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
+                                        <Button color='primary' style={{ color: 'white', zIndex: 1 }} onClick={this.openEleFileBrowser}> 선거권자 파일 등록</Button>
+                                        <input type='file' hidden onChange={this.fileElectorateHandler} ref={this.fileEleInput} onClick={(event) => { event.target.value = null }} style={{ 'padding': '10px' }} />
                                         <input type='text' className='form-control' value={this.state.uploadedEleFileName} readOnly invalid='false' />
                                     </InputGroup>
                                 </Col>

@@ -9,7 +9,7 @@ export default class AuthVotePhone extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            voteId: '',
+            voteId: this.props.match.params.voteId,
             name: '',
             name_ex: '',
             phone: '',
@@ -21,10 +21,6 @@ export default class AuthVotePhone extends Component {
         } 
     }
 
-    componentDidMount() {
-        this.setState({ voteId: this.props.match.params.voteId })
-    }
-
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     }
@@ -32,6 +28,9 @@ export default class AuthVotePhone extends Component {
     // 휴대폰 번호로 인증번호 조회
     handleSendAuthSubmit = async e => {
         e.preventDefault();
+
+        const { voteId, name, name_ex, phone, getAuthStatus } = this.state;
+
         try {
             const response = fetch('/auth', {
             method: 'POST',
@@ -39,10 +38,10 @@ export default class AuthVotePhone extends Component {
                 'Content-Type': 'application/json',
             },  
             body: JSON.stringify({
-                'vote_id': this.state.voteId,
-                'name': this.state.name,
-                'name_ex': this.state.name_ex,
-                'phone': this.state.phone,
+                'vote_id': voteId,
+                'name': name,
+                'name_ex': name_ex,
+                'phone': phone,
                 })
             })
             response.then(result => result.json())
@@ -50,8 +49,7 @@ export default class AuthVotePhone extends Component {
                     console.log(json.status);
                     this.setState({ getAuth: json.auth, getAuthStatus: json.status });
 
-                    if(!this.state.getAuthStatus) {
-                        console.log(this.state.getAuthStatus);
+                    if(!getAuthStatus) {
                         confirmAlert({
                             customUI: ({ onClose }) => {
                             return (
@@ -81,6 +79,9 @@ export default class AuthVotePhone extends Component {
     // 선거권자 인증
     handleAuthSubmit = async e => {
         e.preventDefault();
+
+        const { voteId, name, name_ex, phone, auth, getAuth } = this.state;
+
         try {
             const response = fetch('/electorate', {
             method: 'POST',
@@ -88,10 +89,10 @@ export default class AuthVotePhone extends Component {
                 'Content-Type': 'application/json',
             },  
             body: JSON.stringify({
-                'vote_id': this.state.voteId,
-                'name': this.state.name,
-                'name_ex': this.state.name_ex,
-                'phone': this.state.phone
+                'vote_id': voteId,
+                'name': name,
+                'name_ex': name_ex,
+                'phone': phone
                 })
             })
             response.then(result => result.json())
@@ -106,13 +107,9 @@ export default class AuthVotePhone extends Component {
             console.log(err);
         }
 
-        if(this.state.auth === this.state.getAuth) {
-            console.log('성공이라고고옹오오오오');
+        if(auth === getAuth) {
             window.location.assign('/voting/' + `${this.state.voteId}`);
-            console.log(this.state.voteId);
-        } else {
-            console.log('인증번호 제대로 치셈');
-        }
+        } 
     };
 
     render() {

@@ -9,19 +9,18 @@ export default class AuthVote extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            voteId: '',
+            voteId: this.props.match.params.voteId,
             isAdmin: false, // 사용자 구분
         }
     }
 
     componentDidMount() {
-        this.setState({ voteId: this.props.match.params.voteId })
         this.callApi()
         .then(res => {
             if (!res.result) {
-                this.setState({ loggedIn: false });
+                this.setState({ isAdmin: false });
             } else {
-            this.setState({ loggedIn: true });
+            this.setState({ isAdmin: true });
             }
         })
         .catch(err => console.log(err));

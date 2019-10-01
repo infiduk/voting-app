@@ -26,7 +26,7 @@ export default class VoteResult extends Component {
         }
         this.sessionApi()
             .then(res => {
-                if (!res.json().result) {
+                if (!res.result) {
                     confirmAlert({
                         customUI: ({ onClose }) => {
                         return (
@@ -44,8 +44,6 @@ export default class VoteResult extends Component {
                         )},
                         closeOnClickOutside: false
                     })
-                } else {
-                    console.log(res.session);
                 }
             })
             .catch(err => console.log(err));

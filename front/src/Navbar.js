@@ -31,7 +31,7 @@ export default class NavbarClass extends Component {
     const response = await fetch('/logout');
     this.setState({ loggedIn: false });
     if (response.status !== 200) throw Error(response.msg);
-    return response.json();
+    return window.location.assign('/');
   }
 
   render() {
