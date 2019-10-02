@@ -69,6 +69,26 @@ export default class VoteResult extends Component {
             .then(result => result.json())
             .then(json => {
                 this.setState({ vote: json.voteData, candidate: json.candidateData, totalVote: json.totalVote });
+
+                if (this.state.vote.status != 2) {
+                    confirmAlert({
+                        customUI: ({ onClose }) => {
+                        return (
+                            <div className='custom-confirm-ui'>
+                            <div className='text-center'>
+                                <p style={{ marginBottom: 20 }}>
+                                    완료된 선거의 결과만 볼 수 있습니다.
+                                </p>
+                            </div>
+                            <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                onClose();
+                                window.location.assign('/');
+                            }}> 확인 </button>
+                            </div>
+                        )},
+                        closeOnClickOutside: false
+                    })
+                }
             })
             .catch(err => {
                 console.log(err);
@@ -88,7 +108,7 @@ export default class VoteResult extends Component {
             let result = ((votes/this.state.totalVote) * 100).toFixed(1);
             return(
                 <>
-                <h5 style={{ marginTop: 10 }}>{c.name}</h5>
+                <h5 style={{ marginTop: 10 }}>{c.name}{c.name_ex}</h5>
                 <ProgressBar striped variant="info" now={result} label={`${result}%`}/>
                 </>
             );

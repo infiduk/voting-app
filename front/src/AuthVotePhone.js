@@ -29,7 +29,7 @@ export default class AuthVotePhone extends Component {
     handleSendAuthSubmit = async e => {
         e.preventDefault();
 
-        const { voteId, name, name_ex, phone, getAuthStatus } = this.state;
+        const { voteId, name, name_ex, phone } = this.state;
 
         try {
             const response = fetch('/auth', {
@@ -48,14 +48,15 @@ export default class AuthVotePhone extends Component {
                 .then(json => {
                     console.log(json.status);
                     this.setState({ getAuth: json.auth, getAuthStatus: json.status });
+                    
 
-                    if(!getAuthStatus) {
+                    if(!this.state.getAuthStatus) {
                         confirmAlert({
                             customUI: ({ onClose }) => {
                             return (
                                 <div className='custom-confirm-ui'>
                                 <div className='text-center'>
-                                    <p style={{ marginBottom: 20 }}>선거권자 목록에 등록되지 않은 회원입니다.
+                                    <p style={{ marginBottom: 20 }}>일치하는 회원이 없습니다.
                                     </p>
                                 </div>
                                 <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {

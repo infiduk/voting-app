@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Accordion, Button, Card, Form, FormControl, InputGroup } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -44,6 +46,24 @@ export default class AuthVoteLive extends Component {
                     this.setState({ authStatus: json.status });
                     if (this.state.authStatus) {
                         window.location.assign('/voting/' + `${this.state.voteId}`);
+                    } else {
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                            return (
+                                <div className='custom-confirm-ui'>
+                                <div className='text-center'>
+                                    <p style={{ marginBottom: 20 }}>
+                                        일치하는 회원이 없습니다.
+                                    </p>
+                                </div>
+                                <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                    onClose();
+                                    window.location.assign('/');
+                                }}> 확인 </button>
+                                </div>
+                            )},
+                            closeOnClickOutside: false
+                        })
                     }
                 })
                 .catch(err => {

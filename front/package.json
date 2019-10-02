@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "moment-range": "^4.0.2",
     "react": "^16.9.0",
     "react-addons-update": "^15.6.2",
     "react-bootstrap": "^1.0.0-beta.12",
     "react-confirm-alert": "^2.4.1",
+    "react-daterange-picker": "^2.0.1",
     "react-dom": "^16.9.0",
     "react-excel-renderer": "^1.1.0",
     "react-file-reader": "^1.1.4",

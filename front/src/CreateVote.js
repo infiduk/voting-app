@@ -3,6 +3,9 @@ import { OutTable, ExcelRenderer } from 'react-excel-renderer';
 import { Button, Card, Col, Form, FormGroup, InputGroup } from 'react-bootstrap';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import DateRangePicker from 'react-daterange-picker'
+import 'react-daterange-picker/dist/css/react-calendar.css'
+import moment from 'moment';
 
 import Navbar from './Navbar';
 
@@ -12,8 +15,8 @@ export default class CreateVote extends Component {
         this.statsRef = createRef();
         this.state = {
             title: '',
-            begin_date: '',
-            end_date: '',
+            dates: null,
+            maxDate: moment().add(24, 'days').toDate(),
             limit: '',
             vote_id: '',
 
@@ -68,6 +71,8 @@ export default class CreateVote extends Component {
             .catch(err => console.log(err));
     }
 
+    onSelect = dates => this.setState({dates})
+
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     }
@@ -76,14 +81,15 @@ export default class CreateVote extends Component {
     handleCreateVoteSubmit = async e => {
         e.preventDefault();
 
-        const { title, begin_date, end_date, limit } = this.state;
+        const { title, dates, limit } = this.state;
 
         let voteInfo = {
             'title': title,
-            'begin_date': begin_date,
-            'end_date': end_date,
+            'begin_date': moment(dates.start).format('YYYY-MM-DD HH:mm:ss'),
+            'end_date': moment(dates.end).format('YYYY-MM-DD HH:mm:ss'),
             'limit': limit
         };
+        console.log(JSON.stringify(voteInfo));
 
         const response = fetch('/admin/vote', {
             method: 'POST',
@@ -268,12 +274,13 @@ export default class CreateVote extends Component {
                                 <Form.Control type='text' name='title' size='lg' placeholder='선거 명을 입력하세요.' onChange={this.handleChange} disabled={this.state.isVoteSubmit} />
                             </Form.Group>
                             <Form.Group controlId='begin_date'>
-                                <Form.Label>시작 날짜</Form.Label>
-                                <Form.Control type='date' name='begin_date' size='lg' onChange={this.handleChange} disabled={this.state.isVoteSubmit} />
-                            </Form.Group>
-                            <Form.Group controlId='end_date'>
-                                <Form.Label>종료 날짜</Form.Label>
-                                <Form.Control type='date' name='end_date' size='lg' onChange={this.handleChange} disabled={this.state.isVoteSubmit} />
+                                <Form.Label>선거 날짜 범위 선택</Form.Label><br />
+                                <DateRangePicker
+                                    maximumDate={this.state.maxDate}
+                                    onSelect={this.onSelect}
+                                    value={this.state.dates}
+                                    disabled={this.state.isVoteSubmit}
+                                />
                             </Form.Group>
                             <Form.Group controlId='limit'>
                                 <Form.Label>투표 선출 인원</Form.Label>
