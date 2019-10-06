@@ -5,6 +5,7 @@ const userRouter = express.Router();
 const voteModel = require('../model/vote_model');
 const electorateModel = require('../model/electorate_model');
 const candidateModel = require('../model/candidate_model');
+const request = require('request-promise-native');
 const moment = require('moment'); require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -131,23 +132,23 @@ userRouter.post('/auth', async (req, res) => {
                 let auth = await electorateModel.updateAuth(result[0][0].id);
                 console.log(auth);
                 // 생성된 인증번호를 휴대폰으로 전송
-                // let config = {
-                //     uri: `https://api-sens.ncloud.com/v1/sms/services/${process.env.SENS_SERVICEID}/messages`,
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json; charset=utf-8',
-                //         'x-ncp-auth-key': process.env.SENS_AUTHKEY,
-                //         'x-ncp-service-secret': process.env.SENS_SERVICESECRET,
-                //     },
-                //     json: {
-                //         'type': 'SMS',
-                //         'from': process.env.SENS_SENDNUMBER,
-                //         'to': a_phone,
-                //         'content': `[높은 뜻 정의교회]${user.name}님. ${user.vote_id}번 선거 인증번호는 [${auth}] 입니다.`
-                //     }
-                // };
-                // let response = await request(config);
-                //console.log("메시지 전송: " + response.status);
+                let config = {
+                    uri: `https://api-sens.ncloud.com/v1/sms/services/${process.env.SENS_SERVICEID}/messages`,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        'x-ncp-auth-key': process.env.SENS_AUTHKEY,
+                        'x-ncp-service-secret': process.env.SENS_SERVICESECRET,
+                    },
+                    json: {
+                        'type': 'SMS',
+                        'from': process.env.SENS_SENDNUMBER,
+                        'to': a_phone,
+                        'content': `[높은 뜻 정의교회]${user.name}님. ${user.vote_id}번 선거 인증번호는 [${auth}] 입니다.`
+                    }
+                };
+                let response = await request(config);
+                console.log("메시지 전송: " + response.status);
                 data = { status: true, msg: '인증번호 전송 성공', auth: auth };
                 res.status(200).send(data);
             } else { // 해당 투표 선거권자에 포함되지 않았음

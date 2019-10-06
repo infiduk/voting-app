@@ -69,6 +69,20 @@ class Electorate {
         auth = auth + '';
         return auth.length >= len ? auth : new Array(len - auth.length + 1).join('0') + auth;
     }
+
+    // 선거권자 삭제
+    delete(voteId) {
+        return new Promise(async (resolve, reject) => {
+            let sql = 'DELETE FROM electorate WHERE vote_id = ?';
+            try {
+                let result = await db.query(sql, voteId);
+                resolve(result);
+            } catch(err) {
+                reject(err);
+                console.log(err);
+            }
+        });
+    }
 }
 
 module.exports = new Electorate();

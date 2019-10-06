@@ -52,6 +52,42 @@ export default class AuthVote extends Component {
         }
     }
 
+    deleteVote = async () => {
+        const { voteId } = this.state;
+
+        const response = fetch('/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({voteId}),
+        });
+        response.then(result => result.json())
+            .then(json => {
+                if (json.result) {
+                    confirmAlert({
+                        customUI: ({ onClose }) => {
+                        return (
+                            <div className='custom-confirm-ui'>
+                            <div className='text-center'>
+                                <p style={{ marginBottom: 20 }}>선거 삭제가 완료되었습니다.
+                                </p>
+                            </div>
+                            <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                onClose();
+                                window.location.assign('/');
+                            }}> 확인 </button>
+                            </div>
+                        )},
+                        closeOnClickOutside: false
+                    })
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
     callApi = async () => {
         const response = await fetch('/session');
         if (response.status !== 200) throw Error(response.json().msg);
@@ -81,14 +117,25 @@ export default class AuthVote extends Component {
                             현장 인증
                         </Button>
                     </div>
-                    {this.state.isAdmin === true ?
+                    {this.state.isAdmin === true ? <>
+                    <div style={{ marginTop: 20 }}>
                         <Button
-                            variant='outline-secondary'
+                            variant='outline-info'
                             size='lg'
                             onClick={this.handleSessionSubmit}
                             style={{ width: '83vw', height: '15vw', fontWeight: '900', fontSize: '1.8rem', marginTop: 20, alignItems: 'center', justifyContent: 'center', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
-                            회원 목록 보기
-                        </Button> : <div /> }
+                            회원 인증번호 생성
+                        </Button>
+                    </div>
+                    <div style={{ marginTop: 20 }}>
+                        <Button
+                            variant='outline-warning'
+                            size='lg'
+                            onClick={this.deleteVote}
+                            style={{ width: '83vw', height: '15vw', fontWeight: '900', fontSize: '1.8rem', marginTop: 20, alignItems: 'center', justifyContent: 'center', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
+                            해당 선거 삭제
+                        </Button>
+                    </div> </> : <div /> }
                 </div>
             </div>
         );

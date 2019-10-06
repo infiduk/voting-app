@@ -69,6 +69,20 @@ class Candidate {
             }
         });
     }
+
+    // 후보자 삭제
+    delete(voteId) {
+        return new Promise(async (resolve, reject) => {
+            let sql = 'DELETE FROM candidate WHERE vote_id = ?';
+            try {
+                let result = await db.query(sql, voteId);
+                resolve(result);
+            } catch(err) {
+                reject(err);
+                console.log(err);
+            }
+        });
+    }
 }
 
 module.exports = new Candidate();

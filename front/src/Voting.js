@@ -86,7 +86,23 @@ export default class Voting extends Component {
                 })
                 .then(result => result.json())
                 .then(json => {
-                    console.log(json);
+                    if(!json.result) {
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                            return (
+                                <div className='custom-confirm-ui'>
+                                <div className='text-center'>
+                                    <p style={{ marginBottom: 20 }}>투표가 정상적으로 진행되지 않았습니다.
+                                    </p>
+                                </div>
+                                <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                    onClose();
+                                }}> 확인 </button>
+                                </div>
+                            )},
+                            closeOnClickOutside: false
+                        })
+                    }
                 })
                 .catch(err => {
                     console.log(err);

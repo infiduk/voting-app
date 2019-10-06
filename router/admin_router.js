@@ -3,6 +3,7 @@ const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const adminRouter = express.Router();
 const voteModel = require('../model/vote_model');
+const timeModule = require('../modules/time');
 const candidateModel = require('../model/candidate_model');
 const electorateModel = require('../model/electorate_model')
 const adminModel = require('../model/admin_model');
@@ -25,7 +26,10 @@ adminRouter.post('/admin/vote', async (req, res) => {
     };
     try {
         let result = await voteModel.create(vote);
-        data = { result: true, msg: '선거 등록 성공', data: result[0]['insertId'] };
+        let index = result[0]['insertId'];
+        timeModule.registerTimer(index, vote.begin_date);
+        timeModule.registerTimer(index, vote.end_date);
+        data = { result: true, msg: '선거 등록 성공', data: index };
         res.status(200).send(data);
     } catch (err) {
         data = { result: false, msg: '선거 등록 실패' };
@@ -80,6 +84,23 @@ adminRouter.post('/admin/electorate', async (req, res) => {
         res.status(200).send(data);
     } catch (err) {
         data = { result: false, msg: '후보자 등록 실패' };
+        res.status(500).send(data);
+    }
+});
+
+// 선거 삭제
+adminRouter.delete('/delete', async (req, res) => {
+    let data;
+    let voteId = req.body.voteId;
+    try {
+        await voteModel.delete(voteId);
+        await candidateModel.delete(voteId);
+        await electorateModel.delete(voteId);
+        data = { result: true, msg: '선거 삭제 성공' };
+        res.status(200).send(data);
+    } catch (err) {
+        console.log(err);
+        data = { result: false, msg: '선거 삭제 실패' };
         res.status(500).send(data);
     }
 });

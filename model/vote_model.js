@@ -18,7 +18,7 @@ class Vote {
     // 선거 조회
     select(voteId) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECt * FROM vote WHERE id = ?';
+            let sql = 'SELECT * FROM vote WHERE id = ?';
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);
@@ -28,7 +28,7 @@ class Vote {
         });
     }
 
-    // 진행 중인 선거 목록 조회
+    // 선거 목록 조회
     selectAll(status) {
         return new Promise(async (resolve, reject) => {
             let sql = 'SELECT * FROM vote WHERE status = ?';
@@ -41,15 +41,29 @@ class Vote {
         });
     }
 
-    // 선거 진행 기간 지나면 완료로 상태 변경
+    // 선거 상태 변경
     update(voteId) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'UPDATE vote SET status = 2 WHERE ID = ?';
+            let sql = 'UPDATE vote SET status = status + 1 WHERE ID = ?';
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);
             } catch(err) {
                 reject(err);
+            }
+        });
+    }
+
+    // 선거 삭제
+    delete(voteId) {
+        return new Promise(async (resolve, reject) => {
+            let sql = 'DELETE FROM vote WHERE ID = ?';
+            try {
+                let result = await db.query(sql, voteId);
+                resolve(result);
+            } catch(err) {
+                reject(err);
+                console.log(err);
             }
         });
     }
