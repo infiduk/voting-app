@@ -172,7 +172,6 @@ userRouter.put('/vote', async (req, res) => {
     // 회원이 선택한 후보자 목록 받아와서 득표수 올려줌
     const voteId = req.body.vote_id;
     const candidates = req.body.candidates;
-    console.log('왜1만나오시냐구요' + candidates);
     try {
         let result = await voteModel.select(voteId);
         let end_date = result[0][0].end_date;
@@ -181,7 +180,7 @@ userRouter.put('/vote', async (req, res) => {
             data = { result: false, msg: '투표 종료 시간 경과' };
             res.status(500).send(data);
         } else {
-            console.log('퉆가능');
+            console.log('투표 가능');
             await candidateModel.updateVotes(candidates, voteId);
             data = { result: true, msg: '투표 성공' };
             res.status(200).send(data);
