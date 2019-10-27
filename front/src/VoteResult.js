@@ -113,12 +113,15 @@ export default class VoteResult extends Component {
     render() {
         let resultPg = this.state.candidate.map((c) => {
             let result = ((c.votes / this.state.totalVote) * 100).toFixed(1);
-            this.state.exportVote.push([c.name, c.name_ex, c.votes]);
+            if (result >= 50) this.state.exportVote.push([c.name, c.name_ex, c.votes]);
             // this.state.exportVote.push([c.name, c.name_ex, c,phone, c.votes]);
             return (
                 <>
                     <h5 style={{ marginTop: 10 }}>{c.name}{c.name_ex}님 - 총 {this.state.totalVote}표 중, {c.votes}표 득표</h5>
-                    <ProgressBar striped variant="info" now={result} label={`${result}%`} />
+                    { result >= 50 ?
+                        <ProgressBar striped variant="info" now={result} label={`${result}%`} />
+                        : <ProgressBar striped variant="warning" now={result} label={`${result}%`} />
+                    }
                 </>
             );
         });
