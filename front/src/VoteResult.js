@@ -10,33 +10,6 @@ const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-const dataSet1 = [
-    {
-        name: "Johson",
-        amount: 30000,
-        sex: 'M',
-        is_married: true
-    },
-    {
-        name: "Monika",
-        amount: 355000,
-        sex: 'F',
-        is_married: false
-    },
-    {
-        name: "John",
-        amount: 250000,
-        sex: 'M',
-        is_married: false
-    },
-    {
-        name: "Josef",
-        amount: 450500,
-        sex: 'M',
-        is_married: true
-    }
-];
-
 export default class VoteResult extends Component {
     constructor(props) {
         super(props);
@@ -44,6 +17,7 @@ export default class VoteResult extends Component {
             voteId: this.props.match.params.voteId,
             vote: [],
             candidate: [],
+            exportVote: [],
             canVote: 0,
             totalVote: 0,
         }
@@ -138,15 +112,23 @@ export default class VoteResult extends Component {
 
     render() {
         let resultPg = this.state.candidate.map((c) => {
-            let votes = c.votes;
-            let result = ((votes / this.state.totalVote) * 100).toFixed(1);
+            let result = ((c.votes / this.state.totalVote) * 100).toFixed(1);
+            this.state.exportVote.push([c.name, c.name_ex, c.votes]);
+            // this.state.exportVote.push([c.name, c.name_ex, c,phone, c.votes]);
             return (
                 <>
-                    <h5 style={{ marginTop: 10 }}>{c.name}{c.name_ex}</h5>
+                    <h5 style={{ marginTop: 10 }}>{c.name}{c.name_ex}님 - 총 {this.state.totalVote}표 중, {c.votes}표 득표</h5>
                     <ProgressBar striped variant="info" now={result} label={`${result}%`} />
                 </>
             );
         });
+
+        let dataSet = [
+            {
+                columns: ["name", "name_ex", "phone", "votes"],
+                data: this.state.exportVote,
+            }
+        ];
 
         return (
             <div>
@@ -164,11 +146,7 @@ export default class VoteResult extends Component {
                     <ExcelFile
                         filename={`${this.state.vote.title}` + ' 결과'}
                         element={<Button variant='primary' size='lg' style={{ marginTop: 25 }} block>엑셀 파일로 결과 저장</Button>}>
-                        <ExcelSheet data={resultPg} name='Result'>
-                            <ExcelColumn label='이름' value='name' />
-                            <ExcelColumn label='이름 구분자' value='names' />
-                            <ExcelColumn label='득표수' value='votes' />
-                        </ExcelSheet>
+                        <ExcelSheet dataSet={dataSet} name='vote' />
                     </ExcelFile>
                 </div>
             </div>

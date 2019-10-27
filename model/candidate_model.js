@@ -25,7 +25,7 @@ class Candidate {
     // 선거 결과(득표 수) 조회
     selectResult(voteId) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT id, name, name_ex, votes FROM candidate WHERE vote_id = ? ORDER BY VOTES DESC';
+            let sql = 'SELECT id, name, name_ex, phone, votes FROM candidate WHERE vote_id = ? ORDER BY VOTES DESC';
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);
