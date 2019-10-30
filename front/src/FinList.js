@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { ListGroup } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -12,6 +14,28 @@ export default class FinList extends Component {
     }
 
     componentDidMount() {
+        this.sessionApi()
+            .then(res => {
+                if (!res.result) {
+                    confirmAlert({
+                        customUI: ({ onClose }) => {
+                        return (
+                            <div className='custom-confirm-ui'>
+                            <div className='text-center'>
+                                <p style={{ marginBottom: 20 }}>관리자만 접근 가능합니다.
+                                </p>
+                            </div>
+                            <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                onClose();
+                                window.location.assign('/');
+                            }}> 확인 </button>
+                            </div>
+                        )},
+                        closeOnClickOutside: false
+                    })
+                }
+            })
+            .catch(err => console.log(err));
         this.callApi()
             .then(res => this.setState({ voteList: res.data }))
             .catch(err => console.log(err));
@@ -19,10 +43,15 @@ export default class FinList extends Component {
 
     callApi = async () => {
         const response = await fetch('/list/2');
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
+        if (response.status !== 200) throw Error(response.msg);
+        return response.json();
     };
+
+    sessionApi = async () => {
+        const response = await fetch('/session');
+        if (response.status !== 200) throw Error(response.msg);
+        return response.json();
+    }
 
     render() {
         return (
@@ -34,7 +63,7 @@ export default class FinList extends Component {
                         <ListGroup variant='flush'>
                             <hr />
                             {this.state.voteList.map(voteList => {
-                                return <ListGroup.Item action href={'/voteResult/' + `${voteList.id}`} key={`vostList-${voteList.id}`}>
+                                return <ListGroup.Item action href={`/voteResult/${voteList.id}`} key={`vostList-${voteList.id}`}>
                                 <div className='row'>
                                     <img
                                         alt=''

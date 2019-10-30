@@ -5,6 +5,7 @@ const userRouter = express.Router();
 const voteModel = require('../model/vote_model');
 const electorateModel = require('../model/electorate_model');
 const candidateModel = require('../model/candidate_model');
+const request = require('request-promise-native');
 const moment = require('moment'); require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -40,6 +41,34 @@ userRouter.post('/vote', async (req, res) => {
             msg: '선거 선택 조회 성공',
             voteData: voteResult[0][0],
             candidateData: candidateResult[0],
+        }
+        res.status(200).send(data);
+    } catch (err) {
+        data = {
+            result: false,
+            msg: `선거 선택 조회 실패: ${err}`,
+        }
+        res.status(500).send(data);
+    }
+});
+
+// 완료된 선거 선택
+userRouter.post('/finvote', async (req, res) => {
+    let data;
+    let totalVote = 0;
+    let voteId = req.body.vote_id;
+    try {
+        let voteResult = await voteModel.select(voteId);
+        let candidateResult = await candidateModel.selectResult(voteId);
+        for(var i = 0; i < candidateResult[0].length; i++) {
+            totalVote += candidateResult[0][i].votes;
+        }
+        data = {
+            result: true,
+            msg: '선거 선택 조회 성공',
+            voteData: voteResult[0][0],
+            candidateData: candidateResult[0],
+            totalVote: totalVote,
         }
         res.status(200).send(data);
     } catch (err) {
@@ -95,34 +124,40 @@ userRouter.post('/auth', async (req, res) => {
     const phone = req.body.phone;
     try {
         let result = await electorateModel.select(user);
-        console.log(user);
         let a_phone = new Array(); // 폰 번호 배열 
         a_phone.push(phone);
-        if (phone == result[0][0].phone) {
-            let auth = await electorateModel.updateAuth(result[0][0].id);
-            // 생성된 인증번호를 휴대폰으로 전송
-            // let config = {
-            //     uri: `https://api-sens.ncloud.com/v1/sms/services/${process.env.SENS_SERVICEID}/messages`,
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json; charset=utf-8',
-            //         'x-ncp-auth-key': process.env.SENS_AUTHKEY,
-            //         'x-ncp-service-secret': process.env.SENS_SERVICESECRET,
-            //     },
-            //     json: {
-            //         'type': 'SMS',
-            //         'from': process.env.SENS_SENDNUMBER,
-            //         'to': a_phone,
-            //         'content': `[높은 뜻 정의교회]${user.name}님. ${user.vote_id}번 선거 인증번호는 [${auth}] 입니다.`
-            //     }
-            // };
-            // let response = await request(config);
-            //console.log("메시지 전송: " + response.status);
-            data = { status: true, msg: '인증번호 전송 성공', auth: auth };
-            res.status(200).send(data);
-        } else { // 해당 투표 선거권자에 포함되지 않았음
-            data = { status: false, msg: '입력 값과 일치하는 정보 없음' }
-            res.status(500).send(data);
+        console.log(result[0][0]);
+        if(result[0][0] != null) {
+            if (phone == result[0][0].phone) {
+                let auth = await electorateModel.updateAuth(result[0][0].id);
+                console.log(auth);
+                // 생성된 인증번호를 휴대폰으로 전송
+                let config = {
+                    uri: `https://api-sens.ncloud.com/v1/sms/services/${process.env.SENS_SERVICEID}/messages`,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        'x-ncp-auth-key': process.env.SENS_AUTHKEY,
+                        'x-ncp-service-secret': process.env.SENS_SERVICESECRET,
+                    },
+                    json: {
+                        'type': 'SMS',
+                        'from': process.env.SENS_SENDNUMBER,
+                        'to': a_phone,
+                        'content': `[높은 뜻 정의교회]${user.name}님. ${user.vote_id}번 선거 인증번호는 [${auth}] 입니다.`
+                    }
+                };
+                let response = await request(config);
+                console.log("메시지 전송: " + response.status);
+                data = { status: true, msg: '인증번호 전송 성공', auth: auth };
+                res.status(200).send(data);
+            } else { // 해당 투표 선거권자에 포함되지 않았음
+                data = { status: false, msg: '입력 값과 일치하는 정보 없음' }
+                res.status(500).send(data);
+            }
+        } else {
+                data = { status: false, msg: '입력 값과 일치하는 정보 없음' }
+                res.status(500).send(data);
         }
     } catch (err) {
         console.log(err);
@@ -135,22 +170,25 @@ userRouter.post('/auth', async (req, res) => {
 userRouter.put('/vote', async (req, res) => {
     let data;
     // 회원이 선택한 후보자 목록 받아와서 득표수 올려줌
-    const voteId = req.body.voteId;
+    const voteId = req.body.vote_id;
     const candidates = req.body.candidates;
     try {
         let result = await voteModel.select(voteId);
         let end_date = result[0][0].end_date;
-        if (moment(end_date).isSameOrBefore(monent(), 'second')) {
-            data = { status: false, msg: '투표 종료 시간 경과' };
+        if (moment(end_date).isSameOrBefore(moment(), 'second')) {
+            console.log('시간오류');
+            data = { result: false, msg: '투표 종료 시간 경과' };
             res.status(500).send(data);
         } else {
+            console.log('투표 가능');
             await candidateModel.updateVotes(candidates, voteId);
-            data = { status: true, msg: '투표 성공' };
+            data = { result: true, msg: '투표 성공' };
             res.status(200).send(data);
         }
     } catch (err) {
-        data = { status: false, msg: '투표 실패' };
+        data = { result: false, msg: '투표 실패' };
         res.status(500).send(data);
+        console.log(err);
     }
 });
 

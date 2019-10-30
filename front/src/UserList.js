@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Accordion, Button, Card, Form, InputGroup } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -7,14 +9,36 @@ export default class UserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            voteId: '',
+            voteId: this.props.match.params.voteId,
             name: '',
             name_ex: '',
         }
     }
 
     componentDidMount() {
-        this.setState({ voteId: this.props.match.params.voteId })
+        this.callApi()
+            .then(res => {
+                if (!res.result) {
+                    confirmAlert({
+                        customUI: ({ onClose }) => {
+                        return (
+                            <div className='custom-confirm-ui'>
+                            <div className='text-center'>
+                                <p style={{ marginBottom: 20 }}>관리자만 접근 가능합니다.
+                                </p>
+                            </div>
+                            <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                onClose();
+                                window.location.assign('/');
+                            }}> 확인 </button>
+                            </div>
+                        )},
+                        closeOnClickOutside: false
+                    })
+                } else {
+                }
+            })
+            .catch(err => console.log(err));
     }
 
     handleChange = (e) => {
@@ -47,13 +71,19 @@ export default class UserList extends Component {
             });
     };
 
+    callApi = async () => {
+        const response = await fetch('/session');
+        if (response.status !== 200) throw Error(response.json().msg);
+        return response.json();
+    }
+
     render() {
         return (
             <div>
                 <Navbar />
                 <div style={{ marginTop: 25, padding: 15, flex: 1 }}>
                     <div style={{
-                        display: 'inline-block',
+                        display: 'initial',
                         marginTop: 20,
                         marginBotom: 20,
                         width: '80vw',

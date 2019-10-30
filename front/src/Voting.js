@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Card, Form, FormControl } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
+import List from 'react-list-select';
+import update from 'react-addons-update';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -8,33 +12,30 @@ export default class Voting extends Component {
         super(props);
         this.state = {
             voteId: this.props.match.params.voteId,
-            vote: [],
-            candidate: [],
-            isClicked: [
-                {
-                    candidateId: '',
-                    clicked: false
-                }
-            ]
+            vote: [], // 선거 정보 가져옴
+            candidate: [], // 후보자 정보 가져옴
+            ingLimit: 0, // 선택한 후보자 수
+            canList: [], // 리스트 띄우기용 후보자의 이름 저장
+            canIdArray: [], // 리스트 번호랑 후보자 번호 매칭용
+            canArray: [], // 선택한 리스트의 번호
+            canNewArray: [], // 선택한 후보자의 번호
+            status: false, // 후보자를 더 선택할 수 있으면 false, 아니면 true
         };
-        this.handleCheck = this.handleCheck.bind(this);
+        this.handleChecked = this.handleChecked.bind(this);
     }
 
-    handleCheck(e) {
-        alert(e.currentTarget.dataset.id);
-    }
-
-    async componentDidMount() {
+    componentDidMount() {
+        this._isMounted = true;
         try {
-            await this.callApi();
+            this.callApi();
         } catch (err) {
             console.log(err);
         }
     }
 
-    callApi = async () => {
+    callApi = () => {
         try {
-            await fetch('/vote', {
+            fetch('/vote', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,70 +44,164 @@ export default class Voting extends Component {
                     'vote_id': this.state.voteId
                 })
             })
-                .then(result => result.json())
-                .then(json => {
-                    this.setState({ vote: json.voteData, candidate: json.candidateData });
-                })
-                .catch(err => {
-                    console.log(err);
+            .then(result => result.json())
+            .then(json => {
+                this.setState({ vote: json.voteData, candidate: json.candidateData });
+                this.state.candidate.map((c) => {
+                    this.setState({
+                        canList: update(this.state.canList, { $push: [c.name + c.name_ex] }),
+                        canIdArray: update(this.state.canIdArray, { $push: [c.id] })
+                    })
                 });
+            })
+            .catch(err => {
+                console.log(err);
+            });
         } catch (err) {
             console.log(err);
         }
     };
 
     handleVoteSubmit = async e => {
-        e.preventDefault();
-        try {
-            await fetch('/vote', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    'votd_id': this.state.vote_id,
-                    'candidates': this.state.candidate
+        this.state.canArray.map((c) => {
+            if(c !== null) {
+                let ca = this.state.canIdArray[c];
+                this.state.canNewArray.push(ca);              
+            };
+            console.log(this.state.canNewArray);
+        });
+
+        if(this.state.canNewArray[0] != null) {
+            e.preventDefault();
+            try {
+                await fetch('/vote', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        'vote_id': this.state.voteId,
+                        'candidates': this.state.canNewArray
+                    })
                 })
-            })
                 .then(result => result.json())
                 .then(json => {
-                    this.setState({ vote: json.voteData, candidate: json.candidateData });
+                    if(!json.result) {
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                            return (
+                                <div className='custom-confirm-ui'>
+                                <div className='text-center'>
+                                    <p style={{ marginBottom: 20 }}>투표가 정상적으로 진행되지 않았습니다.
+                                    </p>
+                                </div>
+                                <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                    onClose();
+                                }}> 확인 </button>
+                                </div>
+                            )},
+                            closeOnClickOutside: false
+                        })
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 });
-        } catch (err) {
-            console.log(err);
+            } catch (err) {
+                console.log(err);
+            }
+            this.setState({
+                canNewArray: update(this.state.canNewArray, { $splice: [[0, this.state.canNewArray.length]] })
+            })
+
+            window.location.assign('/');
+        } else {
+            confirmAlert({
+                customUI: ({ onClose }) => {
+                return (
+                    <div className='custom-confirm-ui'>
+                    <div className='text-center'>
+                        <p style={{ marginBottom: 20 }}>최소 한 명 이상의 후보자를 선택해주세요.
+                        </p>
+                    </div>
+                    <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                        onClose();
+                    }}> 확인 </button>
+                    </div>
+                )},
+                closeOnClickOutside: false
+            })
         }
     };
 
+    handleChecked = async (selected) => {
+        let indexId;
+        if(selected.length > 1) {
+            indexId = selected[selected.length - 1];
+        } else {
+            indexId = selected[0];
+        }
+        try {
+            this.state.canArray.map((elem, index) => {
+                if (elem === indexId) {
+                    this.state.ingLimit -= 1;
+                    this.state.status = true;
+                    this.setState({
+                        canArray: update(this.state.canArray, { $splice: [[index, 1]] })
+                    })
+                }
+            });
+            if(!this.state.status) {
+                if (this.state.ingLimit < this.state.vote.limit) {
+                    this.state.ingLimit += 1;
+                    this.setState({
+                        canArray: update(this.state.canArray, { $push: [indexId] }),
+                     })
+                } else {
+                    confirmAlert({
+                        customUI: ({ onClose }) => {
+                        return (
+                            <div className='custom-confirm-ui'>
+                            <div className='text-center'>
+                                <p style={{ marginBottom: 20 }}>더 이상 선택하실 수 없습니다.
+                                </p>
+                            </div>
+                            <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                onClose();
+                            }}> 확인 </button>
+                            </div>
+                        )},
+                        closeOnClickOutside: false
+                    })
+                }
+            }
+            this.state.status = false;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     render() {
+        let canNameList = this.state.canArray.map(c => {
+            return (
+                <h5 style={{margin: 10 }}>{this.state.canList[c]}</h5>
+            )
+        });
+
         return (
             <div>
                 <Navbar />
                 <div style={{ margin: 25 }}>
                     <h3>{this.state.vote.title}</h3>
-                    {/* 자동으로 따라다니는 애로 넣기 */}
-                    <h4 style={{ margin: 10 }}>투표 인원 : 몇명 / 몇명</h4>
-                    <Form inline style={{ marginBottom: 10 }}>
-                        <FormControl type='text' placeholder='검색할 후보자의 이름을 입력하세요.' className='mr-sm-2' style={{ width: '70%' }} />
-                        <Button variant='primary'>검색</Button>
-                    </Form>
+                    <h4 style={{ margin: 10 }}>선택한 후보자 : {this.state.ingLimit}명 / {this.state.vote.limit}명</h4>
+                    {canNameList}
                     <div className='card' style={{ padding: '5px', backgroundColor: '#fafafa' }}>
-                        {this.state.candidate.map(candidate => {
-                            return <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={this.handleCheck} key={candidate.id} data-id={candidate.id}>  
-                                <Card.Body>
-                                    <Form.Check inline id={candidate.id} /><Card.Title>{candidate.name} {candidate.name_ex}
-                                    </Card.Title>
-                                </Card.Body>
-                            </Card>
-                        })}
+                        <List
+                        items={this.state.canList}
+                        multiple={true}
+                        onChange={(selected: number) => {this.handleChecked(selected)}}
+                    />
                     </div>
-                    {/*  return <Card className='card' style={{ height: '4rem', margin: 3, backgroundColor: '#fff' }} onClick={this.handleCheck} key={candidate.id} data-id={candidate.id}>
-                                <Card.Body>
-                                    <Card.Title>{candidate.name} {candidate.name_ex}</Card.Title>
-                                </Card.Body>
-                            </Card> */}
                     <Form>
                         <Button variant='primary' size='lg' style={{ marginTop: 25 }} block onClick={this.handleVoteSubmit}>확인</Button>
                     </Form>

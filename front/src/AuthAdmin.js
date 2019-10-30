@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Redirect } from 'react-router';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -16,7 +17,6 @@ export default class AuthAdmin extends Component {
     // 관리자 로그인 api fetch
     handleSubmit = async e => {
         e.preventDefault();
-
         let adminInfo = {
             'uid': this.state.uid,
             'password': this.state.password
@@ -31,7 +31,25 @@ export default class AuthAdmin extends Component {
             })
             response.then(result => result.json())
                 .then(json => {
-                    console.log(json.data.admin);
+                    if(json.result) {
+                        window.location.assign('/');
+                    } else {
+                        confirmAlert({
+                            customUI: () => {
+                            return (
+                                <div className='custom-confirm-ui'>
+                                <div className='text-center'>
+                                    <p style={{ marginBottom: 20 }}>아이디 또는 비밀번호를 확인해주세요.
+                                    </p>
+                                </div>
+                                <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                    window.location.assign('/authAdmin');
+                                }}> 확인 </button>
+                                </div>
+                            )},
+                            closeOnClickOutside: false
+                        })
+                    }
                 })
                 .catch(err => {
                     console.log(err);
@@ -40,8 +58,7 @@ export default class AuthAdmin extends Component {
         } catch (err) {
             console.log(err);
         }
-
-        this.props.history.push('/');
+        
     };
 
     handleChange = (e) => {
@@ -54,7 +71,7 @@ export default class AuthAdmin extends Component {
                 <Navbar />
                 <div style={{ marginTop: 25, padding: 25, flex: 1 }}>
                     <div style={{
-                        display: 'inline-block',
+                        display: 'initial',
                         marginTop: 20,
                         marginBotom: 20,
                         width: '60vw',

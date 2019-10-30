@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // cross domain issue
+const timeModule = require('./modules/time');
 const corsOptions = {
     origin: true,
     credentials: true
@@ -33,14 +34,12 @@ app.get('/testExpress', (req, res) => {
     res.send({ express: 'Hello From Express' });
 });
 
-// app.post('/sendExpress', (req, res) => {
-//     console.log(req.body);
-//     res.send(
-//         `I received your POST request. This is what you sent me: ${req.body.post}`,
-//     );
-// });
-
 // Server initialize
-app.listen(3000, function () {
+app.listen(3000, async () => {
     console.log("Run server");
+    try {
+        await timeModule.initVoteStatus();
+    } catch (err) {
+        console.log(err);
+    }
 });

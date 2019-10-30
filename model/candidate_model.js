@@ -25,7 +25,7 @@ class Candidate {
     // 선거 결과(득표 수) 조회
     selectResult(voteId) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT * FROM candidate WHERE VOTE_NO = ? ORDER BY VOTES';
+            let sql = 'SELECT id, name, name_ex, phone, votes FROM candidate WHERE vote_id = ? ORDER BY VOTES DESC';
             try {
                 let result = await db.query(sql, voteId);
                 resolve(result);
@@ -51,18 +51,35 @@ class Candidate {
 
     // 득표 수 업데이트
     updateVotes(candidates, voteId) {
-        let phrase;
+        let phrase = '';
         for(let i = 0; i < candidates.length; ++i) {
-            phrase = phrase + 'id = ' + candidates[i].id;
+            candidates[i] += 1;
+            phrase = phrase + 'id = ' + candidates[i];
             if(i < candidates.length - 1) phrase = phrase + ' or ';
+            console.log(phrase);
         }
         return new Promise(async (resolve, reject) => {
-            let sql = 'UPDATE candidate SET VOTES = VOTES + 1 WHERE ? AND VOTE_ID = ?';
+            let sql = 'UPDATE candidate SET VOTES = VOTES + 1 WHERE ' + phrase + ' AND VOTE_ID = ?';
             try {
-                let result = await db.query(sql, [phrase, voteId]);
+                console.log(sql);
+                let result = await db.query(sql, voteId);
                 resolve(result);
             } catch(err) {
                 reject(err);
+            }
+        });
+    }
+
+    // 후보자 삭제
+    delete(voteId) {
+        return new Promise(async (resolve, reject) => {
+            let sql = 'DELETE FROM candidate WHERE vote_id = ?';
+            try {
+                let result = await db.query(sql, voteId);
+                resolve(result);
+            } catch(err) {
+                reject(err);
+                console.log(err);
             }
         });
     }

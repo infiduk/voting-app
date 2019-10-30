@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Accordion, Button, Card, Form, FormControl, InputGroup } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Navbar from './Navbar';
 
@@ -7,17 +9,13 @@ export default class AuthVoteLive extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            voteId: '',
+            voteId: this.props.match.params.voteId,
             authStatus: false,
 
             name: '',
             name_ex: '',
             auth: '',
         }
-    }
-
-    componentDidMount() {
-        this.setState({ voteId: this.props.match.params.voteId });
     }
 
     handleChange = (e) => {
@@ -27,6 +25,9 @@ export default class AuthVoteLive extends Component {
     // 선거권자 인증
     handleAuthSubmit = async e => {
         e.preventDefault();
+
+        const { voteId, name, name_ex, auth } = this.state;
+
         try {
             const response = fetch('/electorate', {
                 method: 'POST',
@@ -34,26 +35,40 @@ export default class AuthVoteLive extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    'vote_id': this.state.voteId,
-                    'name': this.state.name,
-                    'name_ex': this.state.name_ex,
-                    'auth': this.state.auth,
+                    'vote_id': voteId,
+                    'name': name,
+                    'name_ex': name_ex,
+                    'auth': auth,
                 })
             })
             response.then(result => result.json())
                 .then(json => {
                     this.setState({ authStatus: json.status });
                     if (this.state.authStatus) {
-                        console.log('성공이라고고옹오오오오');
-                        this.props.history.push('/voting/' + `${this.state.voteId}`);
+                        window.location.assign(`/voting/${this.state.voteId}`);
                     } else {
-                        console.log('인증번호 제대로 치셈');
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                            return (
+                                <div className='custom-confirm-ui'>
+                                <div className='text-center'>
+                                    <p style={{ marginBottom: 20 }}>
+                                        일치하는 회원이 없습니다.
+                                    </p>
+                                </div>
+                                <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
+                                    onClose();
+                                    window.location.assign('/');
+                                }}> 확인 </button>
+                                </div>
+                            )},
+                            closeOnClickOutside: false
+                        })
                     }
                 })
                 .catch(err => {
                     console.log(err);
-                }
-                );
+                });
         } catch (err) {
             console.log(err);
         }
@@ -65,7 +80,7 @@ export default class AuthVoteLive extends Component {
                 <Navbar />
                 <div style={{ marginTop: 25, padding: 15, flex: 1 }}>
                     <div style={{
-                        display: 'inline-block',
+                        display: 'initial',
                         marginTop: 20,
                         marginBotom: 20,
                         width: '80vw',

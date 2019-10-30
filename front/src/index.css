@@ -11,3 +11,41 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.react-list-select {
+	display: inline-block;
+	position: relative;
+	outline: none;
+}
+
+.react-list-select--item {
+	padding: 0.3em 0.6em;
+	cursor: pointer;
+	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+  user-select: none;
+}
+
+ul.react-list-select li.react-list-select--item.is-focused {
+	-webkit-user-select: inherit;
+	-moz-user-select: inherit;
+	-ms-user-select: inherit;
+	-o-user-select: inherit;
+  user-select: inherit;
+  background-color: #bfbfbf
+}
+
+.react-list-select--item.is-disabled {
+	cursor: default;
+}
+
+ul.react-list-select li.react-list-select--item.is-selected {
+  -webkit-user-select: inherit;
+	-moz-user-select: inherit;
+	-ms-user-select: inherit;
+	-o-user-select: inherit;
+  user-select: inherit;
+}

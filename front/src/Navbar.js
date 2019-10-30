@@ -12,8 +12,10 @@ export default class NavbarClass extends Component {
   componentDidMount() {
     this.callApi()
       .then(res => {
-          if (res.session != null || res.session != undefined) {
-            this.setState({ loggedIn: true });
+        if (!res.result) {
+            this.setState({ loggedIn: false });
+        } else {
+          this.setState({ loggedIn: true });
         }
       })
       .catch(err => console.log(err));
@@ -21,17 +23,15 @@ export default class NavbarClass extends Component {
 
   callApi = async () => {
     const response = await fetch('/session');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
+    if (response.status !== 200) throw Error(response.msg);
+    return response.json();
   }
 
   logout = async () => {
     const response = await fetch('/logout');
-    const body = await response.json();
     this.setState({ loggedIn: false });
-    if (response.status !== 200) throw Error(body.message);
-    return body;
+    if (response.status !== 200) throw Error(response.msg);
+    return window.location.assign('/');
   }
 
   render() {
@@ -49,11 +49,10 @@ export default class NavbarClass extends Component {
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
               <Nav.Link href='/'>진행중인 선거 목록</Nav.Link>
-              <Nav.Link href='/finList'>완료된 선거 목록</Nav.Link>
+              
             </Nav>
-            {this.state.loggedIn == true ? <Nav><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link></Nav>
-              : <Nav><Nav.Link href='/authAdmin'>관리자</Nav.Link>
-                <Nav.Link href='/adminSignup'>회원가입</Nav.Link></Nav>
+            {this.state.loggedIn === true ? <Nav><Nav.Link href='/finList'>완료된 선거 목록</Nav.Link><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link><Nav.Link href='/adminSignup'>관리자 추가</Nav.Link></Nav>
+              : <Nav><Nav.Link href='/authAdmin'>관리자</Nav.Link></Nav>
             }
           </Navbar.Collapse>
         </Navbar>

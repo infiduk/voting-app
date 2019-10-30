@@ -8,6 +8,7 @@ class Admin {
                 let result = await db.query(sql, admin);
                 resolve(result);
             } catch (err) {
+                console.log(err);
                 reject(err);
             }
         });
