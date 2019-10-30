@@ -34,7 +34,7 @@ export default class IngList extends Component {
                         <ListGroup variant='flush'>
                             <hr />
                             {this.state.voteList.map(voteList => {
-                                return <ListGroup.Item action href={'/authVote/' + `${voteList.id}`} key={`vostList-${voteList.id}`}>
+                                return <ListGroup.Item action href={`/authVote/${voteList.id}`} key={`vostList-${voteList.id}`}>
                                 <div className='row'>
                                     <img
                                         alt=''

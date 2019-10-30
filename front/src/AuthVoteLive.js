@@ -45,7 +45,7 @@ export default class AuthVoteLive extends Component {
                 .then(json => {
                     this.setState({ authStatus: json.status });
                     if (this.state.authStatus) {
-                        window.location.assign('/voting/' + `${this.state.voteId}`);
+                        window.location.assign(`/voting/${this.state.voteId}`);
                     } else {
                         confirmAlert({
                             customUI: ({ onClose }) => {

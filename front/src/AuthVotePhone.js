@@ -60,7 +60,7 @@ export default class AuthVotePhone extends Component {
                                     </p>
                                 </div>
                                 <button className="btn btn-cn btn-secondary" autoFocus onClick={() => {
-                                    window.location.assign('/authPhone/' + `${this.state.voteId}`);
+                                    window.location.assign(`/authPhone/${this.state.voteId}`);
                                 }}> 확인 </button>
                                 </div>
                             )},
@@ -109,7 +109,7 @@ export default class AuthVotePhone extends Component {
         }
 
         if(auth === getAuth) {
-            window.location.assign('/voting/' + `${this.state.voteId}`);
+            window.location.assign(`/voting/${this.state.voteId}`);
         } 
     };
 

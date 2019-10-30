@@ -29,7 +29,7 @@ export default class AuthVote extends Component {
     handleSessionSubmit = () => {
         try {
             if (this.state.isAdmin) {
-                window.location.assign('/UserList/' + `${this.state.voteId}`);
+                window.location.assign(`/UserList/${this.state.voteId}`);
             } else {
                 confirmAlert({
                     customUI: ({ onClose }) => {
@@ -103,7 +103,7 @@ export default class AuthVote extends Component {
                         <Button
                             variant='outline-primary'
                             size='lg'
-                            href={'/authPhone/' + `${this.state.voteId}`}
+                            href={`/authPhone/${this.state.voteId}`}
                             style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem', alignItems: 'center', justifyContent: 'center', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
                             모바일 인증
                         </Button>
@@ -112,7 +112,7 @@ export default class AuthVote extends Component {
                         <Button
                             variant='outline-secondary'
                             size='lg'
-                            href={'/authLive/' + `${this.state.voteId}`}
+                            href={`/authLive/${this.state.voteId}`}
                             style={{ width: '40vw', height: '50vw', fontWeight: '900', fontSize: '1.8rem', alignItems: 'center', justifyContent: 'center', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
                             현장 인증
                         </Button>

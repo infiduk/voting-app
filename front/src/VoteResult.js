@@ -8,7 +8,6 @@ import Navbar from './Navbar';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 export default class VoteResult extends Component {
     constructor(props) {
@@ -77,7 +76,7 @@ export default class VoteResult extends Component {
                 .then(json => {
                     this.setState({ vote: json.voteData, candidate: json.candidateData, totalVote: json.totalVote });
 
-                    if (this.state.vote.status != 2) {
+                    if (this.state.vote.status !== 2) {
                         confirmAlert({
                             customUI: ({ onClose }) => {
                                 return (
@@ -147,7 +146,7 @@ export default class VoteResult extends Component {
                         <Button variant='primary' size='lg' style={{ marginTop: 25 }} onClick={this.handleGoBack} block>뒤로가기</Button>
                     </Form>
                     <ExcelFile
-                        filename={`${this.state.vote.title}` + ' 결과'}
+                        filename={`${this.state.vote.title} 결과`}
                         element={<Button variant='primary' size='lg' style={{ marginTop: 25 }} block>엑셀 파일로 결과 저장</Button>}>
                         <ExcelSheet dataSet={dataSet} name='vote' />
                     </ExcelFile>
