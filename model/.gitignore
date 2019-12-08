@@ -1,1 +1,3 @@
+./db-connection
+./connect_remote.js
 ./connect.js

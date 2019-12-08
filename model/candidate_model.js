@@ -1,5 +1,3 @@
-const db = require('./connect');
-
 class Candidate {
     // 후보자 추가
     create(candidates) {

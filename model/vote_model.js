@@ -1,61 +1,60 @@
-const db = require('./connect');
+const Vote = require('./schema/vote');
 
-class Vote {
+class VoteModel {
     // 새 선거 생성
     create(vote) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'INSERT INTO vote SET ?';
+            const v = new Vote(vote);
             try {
-                let result = await db.query(sql, vote);
-                resolve(result);
-            } catch(err) {
-                console.log(err);
-                reject(err);
+                await v.save();
+                resolve("선거 생성 성공");
+            } catch (err) {
+                console.log(`선거 생성 오류: ${err}`);
+                reject("선거 생성 실패");
             }
         });
     }
 
     // 선거 조회
-    select(voteId) {
+    select(id) {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT * FROM vote WHERE id = ?';
             try {
-                let result = await db.query(sql, voteId);
+                const result = await Vote.findById(id);
                 resolve(result);
             } catch(err) {
-                reject(err);
+                console.log(`선거 조회 오류: ${err}`);
+                reject("선거 조회 실패");
             }
         });
     }
 
     // 선거 목록 조회
-    selectAll(status) {
+    selectAll() {
         return new Promise(async (resolve, reject) => {
-            let sql = 'SELECT * FROM vote WHERE status = ?';
             try {
-                let result = await db.query(sql, status);
+                const result = await Vote.find({ status: { $gt: 0} });
                 resolve(result);
             } catch(err) {
-                reject(err);
+                console.log(`선거 목록 조회 오류: ${err}`);
+                reject("선거 목록 조회 실패");
             }
         });
     }
 
     // 선거 상태 변경
-    update(voteId) {
+    updateStatus() {
         return new Promise(async (resolve, reject) => {
-            let sql = 'UPDATE vote SET status = status + 1 WHERE ID = ?';
             try {
-                let result = await db.query(sql, voteId);
-                resolve(result);
+                
             } catch(err) {
-                reject(err);
+                console.log(`선거 상태 변경 오류: ${err}`);
+                reject("선거 상태 변경 실패");
             }
         });
     }
 
     // 선거 삭제
-    delete(voteId) {
+    delete(id) {
         return new Promise(async (resolve, reject) => {
             let sql = 'DELETE FROM vote WHERE ID = ?';
             try {
@@ -69,4 +68,4 @@ class Vote {
     }
 }
 
-module.exports = new Vote();
+module.exports = new VoteModel();

@@ -1,5 +1,3 @@
-const db = require('./connect');
-
 class Admin {
     create(admin) {
         return new Promise(async (resolve, reject) => {

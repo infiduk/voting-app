@@ -1,6 +1,5 @@
 const voteModel = require('../model/vote_model');
-const moment = require('moment'); require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
+const moment = require('./moment')
 
 class Time {
     // 선거 상태 초기화
@@ -40,7 +39,7 @@ class Time {
 
     // 타이머 등록
     registerTimer(voteId, referenceDate) {
-        setTimeout(async () => { // 완료시간 경과 안됐으면 상태 변경 타이머 작동
+        setTimeout(async () => { // 완료시간 경과 안됐으면 타이머 작동
             await voteModel.update(voteId);
         }, moment(referenceDate).diff(moment()));
     }
