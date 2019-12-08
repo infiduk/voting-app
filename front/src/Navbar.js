@@ -1,42 +1,48 @@
-import React, { Component } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import React, { Component } from 'react'
+import { Navbar, Nav } from 'react-bootstrap'
 
 export default class NavbarClass extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       loggedIn: false,
     }
   }
 
   componentDidMount() {
-    this.callApi()
+    this.sessionApi()
       .then(res => {
-        if (!res.result) {
-            this.setState({ loggedIn: false });
-        } else {
-          this.setState({ loggedIn: true });
-        }
+        res.result
+          ? this.setState({ loggedIn: true })
+          : this.setState({ loggedIn: false })
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
   }
 
-  callApi = async () => {
-    const response = await fetch('/session');
-    if (response.status !== 200) throw Error(response.msg);
-    return response.json();
+  sessionApi = async () => {
+    try {
+      const response = await fetch('/session')
+      if (response.status !== 200) throw Error(response.msg)
+      return response.json()
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   logout = async () => {
-    const response = await fetch('/logout');
-    this.setState({ loggedIn: false });
-    if (response.status !== 200) throw Error(response.msg);
-    return window.location.assign('/');
+    try {
+      const response = await fetch('/logout')
+      this.setState({ loggedIn: false })
+      if (response.status !== 200) throw Error(response.msg)
+      return window.location.assign('/')
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Navbar bg='dark' variant='dark' expand='lg'>
           <Navbar.Brand href='/'>
             <img
@@ -49,14 +55,13 @@ export default class NavbarClass extends Component {
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
               <Nav.Link href='/'>진행중인 선거 목록</Nav.Link>
-              
             </Nav>
-            {this.state.loggedIn === true ? <Nav><Nav.Link href='/finList'>완료된 선거 목록</Nav.Link><Nav.Link href='/createVote'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link><Nav.Link href='/adminSignup'>관리자 추가</Nav.Link></Nav>
-              : <Nav><Nav.Link href='/authAdmin'>관리자</Nav.Link></Nav>
+            {this.state.loggedIn ? <Nav><Nav.Link href='/results'>완료된 선거 목록</Nav.Link><Nav.Link href='/create'>선거 만들기</Nav.Link><Nav.Link href='/' onClick={this.logout}>로그아웃</Nav.Link><Nav.Link href='/signup'>관리자 추가</Nav.Link></Nav>
+              : <Nav><Nav.Link href='/signin'>관리자</Nav.Link></Nav>
             }
           </Navbar.Collapse>
         </Navbar>
-      </div>
+      </React.Fragment>
     )
   }
 }

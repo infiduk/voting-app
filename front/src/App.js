@@ -1,48 +1,49 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.css';
 
-import IngList from './IngList';
-import FinList from './FinList';
+import Main from './Main';
+import Result from './pages/vote/Result';
+import ResultDetail from './pages/vote/ResultDetail';
 
-import AuthVote from './AuthVote';
-import AuthVotePhone from './AuthVotePhone';
-import AuthVoteLive from './AuthVoteLive';
-import AuthAdmin from './AuthAdmin';
-import UserList from './UserList';
+import SelectAuth from './pages/auth/SelectAuth';
+import Auth_Phone from './pages/auth/Phone';
+import Auth_Live from './pages/auth/Live';
+import Auth_Admin from './pages/auth/Admin';
 
-import CreateVote from './CreateVote';
+import Create from './pages/vote/Create';
 
-import Voting from './Voting';
-import VoteResult from './VoteResult';
+import Voting from './pages/vote/Voting';
 
-import AdminSignup from './AdminSignup';
+import Admin_SignUp from './pages/admin/SignUp';
+import Admin_SignIn from './pages/admin/SignIn';
+
+import NavBar from './Navbar';
 
 export default class App extends Component {
   render() {
     return (
       <Router>
-        <div>
+          <NavBar />
           <Switch>
             {/* 진행중인 선거 목록, 메인 */}  
-            <Route exact path='/' component={IngList} />
+            <Route exact path='/' component={Main} />
             {/* 완료된 선거 목록 */}
-            <Route path='/finList' component={FinList} />
+            <Route path='/results' component={Result} />
             {/* 인증 */}
-            <Route path='/authVote/:voteId' component={AuthVote} />
-            <Route path='/authPhone/:voteId' component={AuthVotePhone} />
-            <Route path='/authLive/:voteId' component={AuthVoteLive} />
-            <Route path='/authAdmin' component={AuthAdmin} />
-            <Route path='/adminSignup' component={AdminSignup} />
-            <Route path='/userList/:voteId' component={UserList} />
+            <Route path='/auth/:voteId' component={SelectAuth} />
+            <Route path='/phone/:voteId' component={Auth_Phone} />
+            <Route path='/live/:voteId' component={Auth_Live} />
+            <Route path='/admin/:voteId' component={Auth_Admin} />
+            {/* 관리자 로그인, 회원가입 */}
+            <Route path='/signin' component={Admin_SignIn} />
+            <Route path='/signup' component={Admin_SignUp} />
             {/* 선거 만들기 */}
-            <Route path='/createVote' component={CreateVote} />
+            <Route path='/create' component={Create} />
             {/* 투표하기 */}
             <Route path='/voting/:voteId' component={Voting} />
             {/* 투표 완료 상세정보*/}
-            <Route path='/voteResult/:voteId' component={VoteResult} />
+            <Route path='/result/:voteId' component={ResultDetail} />
           </Switch>
-        </div>
       </Router>
     );
   }
